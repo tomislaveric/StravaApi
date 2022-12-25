@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "httprequest",
+      "identity" : "http-request",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tomislaveric/HTTPRequest.git",
+      "location" : "https://github.com/tomislaveric/http-request.git",
       "state" : {
         "branch" : "main",
-        "revision" : "67956a7f76e2ecd99784352b0911e1ac6d7926dc"
+        "revision" : "d7ed2f1484bfc44a680ece3552d98830172f52ea"
       }
     }
   ],

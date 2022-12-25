@@ -23,9 +23,14 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "StravaApi",
-            dependencies: ["HTTPRequest"]),
+            dependencies: [
+                .product(name: "HTTPRequest", package: "http-request")
+            ]),
         .testTarget(
             name: "StravaApiTests",
-            dependencies: ["StravaApi", "HTTPRequest"]),
+            dependencies: [
+                "StravaApi",
+                .product(name: "HTTPRequest", package: "http-request")
+            ]),
     ]
 )
