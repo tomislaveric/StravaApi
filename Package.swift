@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "StravaApi",
+    name: "strava-api",
     platforms: [
         .macOS(.v10_15),
     ],
