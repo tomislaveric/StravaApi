@@ -3,12 +3,22 @@ import Foundation
 
 public protocol StravaApi {
     func getProfile() async throws -> Athlete
+    func getUserActivities() async throws -> [DetailedActivity]
 }
 
 public struct StravaApiImpl: StravaApi {
-
+    public func getUserActivities() async throws -> [DetailedActivity] {
+        guard let url = URL(string: "\(Endpoint.baseUrl.rawValue)\(Endpoint.athleteActivities.rawValue)") else {
+            throw StravaApiError.badUrl
+        }
+        var urlRequest = URLRequest(url: url)
+        urlRequest.addValue(token, forHTTPHeaderField: "Authorization")
+        return try await session.get(request: urlRequest)
+    }
+    
+    
     public func getProfile() async throws -> Athlete {
-        guard let url = URL(string: "\(Endpoint.activity.rawValue)") else {
+        guard let url = URL(string: "\(Endpoint.baseUrl.rawValue)\(Endpoint.athlete.rawValue)") else {
             throw StravaApiError.badUrl
         }
         var urlRequest = URLRequest(url: url)
@@ -25,12 +35,10 @@ public struct StravaApiImpl: StravaApi {
     }
 }
 
-public struct Athlete: Decodable, Equatable {
-    public let username: String
-}
-
 enum Endpoint: String {
-    case activity = "https://www.strava.com/api/v3/athlete"
+    case baseUrl = "https://www.strava.com/api/v3"
+    case athlete = "/athlete"
+    case athleteActivities = "/athlete/activities"
 }
 
 enum StravaApiError: Error {
