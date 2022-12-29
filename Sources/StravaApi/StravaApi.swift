@@ -25,13 +25,13 @@ public struct StravaApiImpl: StravaApi {
         if let token = try await oAuth.getAccessToken() {
             urlRequest.addValue(token, forHTTPHeaderField: "Authorization")
         }
-        return try await session.get(request: urlRequest)
+        return try await request.get(request: urlRequest)
     }
     
-    private let session: HTTPRequest
+    private let request: HTTPRequest
     private let oAuth: OAuth
     
-    public init(config: StravaConfig) {
+    public init(config: StravaConfig, request: HTTPRequest = HTTPRequestImpl()) {
         let oAuthConfig = OAuthConfig(
             authorizeUrl: config.authorizeUrl,
             tokenUrl: config.tokenUrl,
@@ -45,8 +45,8 @@ public struct StravaApiImpl: StravaApi {
             authorizationGrant: config.authorizationGrant,
             refreshGrant: config.refreshGrant
         )
-        oAuth = OAuthImpl(config: oAuthConfig)
-        session = HTTPRequestImpl()
+        self.request = request
+        self.oAuth = OAuthImpl(config: oAuthConfig)
     }
 }
 
