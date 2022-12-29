@@ -1,10 +1,3 @@
-//
-//  Athlete.swift
-//  
-//
-//  Created by Tomislav Eric on 25.12.22.
-//
-
 import Foundation
 
 public struct Athlete: Decodable, Equatable {

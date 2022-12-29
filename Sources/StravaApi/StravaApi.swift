@@ -39,39 +39,15 @@ public struct StravaApiImpl: StravaApi {
             redirectUri: config.redirectUri,
             callbackURLScheme: config.callbackURLScheme,
             clientSecret: config.clientSecret,
-            scope: config.scope.joined(separator: ","))
-        
+            responseType: config.responseType,
+            approvalPrompt: config.approvalPrompt,
+            scope: config.scope.joined(separator: ","),
+            authorizationGrant: config.authorizationGrant,
+            refreshGrant: config.refreshGrant
+        )
         oAuth = OAuthImpl(config: oAuthConfig)
         session = HTTPRequestImpl()
     }
-}
-
-public struct StravaConfig {
-    public init(authorizeUrl: String, tokenUrl: String, clientId: String, redirectUri: String, callbackURLScheme: String, clientSecret: String, scope: [String]) {
-        self.authorizeUrl = authorizeUrl
-        self.tokenUrl = tokenUrl
-        self.clientId = clientId
-        self.redirectUri = redirectUri
-        self.callbackURLScheme = callbackURLScheme
-        self.clientSecret = clientSecret
-        self.scope = scope
-    }
-    
-    public enum GrantType: String {
-        case authorizationCode = "authorization_code"
-        case refreshToken = "refresh_token"
-    }
-    
-    public let authorizeUrl: String
-    public let tokenUrl: String
-    public let clientId: String
-    public let redirectUri: String
-    public let callbackURLScheme: String
-    public let clientSecret: String
-    public let responseType: String = "code"
-    public let approvalPrompt: String = "auto"
-    public let grantType: GrantType = .authorizationCode
-    public let scope: [String]
 }
 
 enum Endpoint: String {
