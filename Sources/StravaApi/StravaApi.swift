@@ -7,7 +7,8 @@ public protocol StravaApi {
     func getUserActivities() async throws -> [DetailedActivity]
 }
 
-public struct StravaApiImpl: StravaApi {
+public class StravaApiImpl: StravaApi {
+    private var currentToken: Token?
     
     public func getUserActivities() async throws -> [DetailedActivity] {
         return try await handleRequest(endpoint: Endpoint.athleteActivities)
@@ -22,8 +23,11 @@ public struct StravaApiImpl: StravaApi {
             throw StravaApiError.badUrl
         }
         var urlRequest = URLRequest(url: url)
-        if let token = try await oAuth.getAccessToken() {
-            urlRequest.addValue(token, forHTTPHeaderField: "Authorization")
+        if let token = try await oAuth.getAccessToken(currentToken: currentToken) {
+            //TODO: Save Token
+            self.currentToken = token
+            let url = "\(token.token_type) \(token.access_token)"
+            urlRequest.addValue(url, forHTTPHeaderField: "Authorization")
         }
         return try await request.get(request: urlRequest)
     }

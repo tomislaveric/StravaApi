@@ -18,7 +18,8 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
          .package(url: "https://github.com/tomislaveric/http-request.git", branch: "main"),
-         .package(url: "https://github.com/tomislaveric/oauth.git", branch: "main")
+         .package(url: "https://github.com/tomislaveric/oauth.git", branch: "main"),
+         .package(url: "https://github.com/tomislaveric/keychain-storage.git", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -27,6 +28,7 @@ let package = Package(
             name: "StravaApi",
             dependencies: [
                 .product(name: "HTTPRequest", package: "http-request"),
+                .product(name: "KeychainStorage", package: "keychain-storage"),
                 .product(name: "OAuth", package: "oauth"),
             ]),
         .testTarget(
@@ -34,6 +36,7 @@ let package = Package(
             dependencies: [
                 "StravaApi",
                 .product(name: "HTTPRequest", package: "http-request"),
+                .product(name: "KeychainStorage", package: "keychain-storage"),
                 .product(name: "OAuth", package: "oauth"),
             ]),
     ]

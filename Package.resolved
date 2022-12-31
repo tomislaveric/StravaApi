@@ -8,6 +8,24 @@
         "branch" : "main",
         "revision" : "d7ed2f1484bfc44a680ece3552d98830172f52ea"
       }
+    },
+    {
+      "identity" : "keychain-storage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tomislaveric/keychain-storage.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "0368482b301ea216bb619dd32cd4d810f713f8b5"
+      }
+    },
+    {
+      "identity" : "oauth",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tomislaveric/oauth.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ab303cb11cb23fc27a604520c9ab79c55deffef0"
+      }
     }
   ],
   "version" : 2
