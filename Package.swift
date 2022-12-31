@@ -28,15 +28,14 @@ let package = Package(
             name: "StravaApi",
             dependencies: [
                 .product(name: "HTTPRequest", package: "http-request"),
-                .product(name: "KeychainStorage", package: "keychain-storage"),
                 .product(name: "OAuth", package: "oauth"),
+                .product(name: "KeychainStorage", package: "keychain-storage"),
             ]),
         .testTarget(
             name: "StravaApiTests",
             dependencies: [
                 "StravaApi",
                 .product(name: "HTTPRequest", package: "http-request"),
-                .product(name: "KeychainStorage", package: "keychain-storage"),
                 .product(name: "OAuth", package: "oauth"),
             ]),
     ]

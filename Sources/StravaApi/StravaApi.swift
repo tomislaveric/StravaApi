@@ -1,6 +1,7 @@
 import HTTPRequest
 import Foundation
 import OAuth
+import KeychainStorage
 
 public protocol StravaApi {
     func getProfile() async throws -> Athlete
@@ -8,7 +9,16 @@ public protocol StravaApi {
 }
 
 public class StravaApiImpl: StravaApi {
-    private var currentToken: Token?
+    private let storageName = Bundle.main.bundleIdentifier ?? "StravaApi"
+    
+    private func getSavedToken() throws -> Token? {
+        guard let token: Token = try self.storage.read(name: storageName) else { return nil }
+        return token
+    }
+    
+    private func save(token: Token) throws {
+        try self.storage.save(name: storageName, object: token)
+    }
     
     public func getUserActivities() async throws -> [DetailedActivity] {
         return try await handleRequest(endpoint: Endpoint.athleteActivities)
@@ -23,9 +33,9 @@ public class StravaApiImpl: StravaApi {
             throw StravaApiError.badUrl
         }
         var urlRequest = URLRequest(url: url)
-        if let token = try await oAuth.getAccessToken(currentToken: currentToken) {
+        if let token = try await oAuth.getAccessToken(currentToken: getSavedToken()) {
             //TODO: Save Token
-            self.currentToken = token
+            try save(token: token)
             let url = "\(token.token_type) \(token.access_token)"
             urlRequest.addValue(url, forHTTPHeaderField: "Authorization")
         }
@@ -34,8 +44,9 @@ public class StravaApiImpl: StravaApi {
     
     private let request: HTTPRequest
     private let oAuth: OAuth
+    private let storage: KeychainStorage
     
-    public init(config: StravaConfig, request: HTTPRequest = HTTPRequestImpl()) {
+    public init(config: StravaConfig, request: HTTPRequest = HTTPRequestImpl(), storage: KeychainStorage = KeychainStorageImpl()) {
         let oAuthConfig = OAuthConfig(
             authorizeUrl: config.authorizeUrl,
             tokenUrl: config.tokenUrl,
@@ -51,6 +62,7 @@ public class StravaApiImpl: StravaApi {
         )
         self.request = request
         self.oAuth = OAuthImpl(config: oAuthConfig)
+        self.storage = storage
     }
 }
 

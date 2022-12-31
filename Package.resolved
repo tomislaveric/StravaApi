@@ -6,7 +6,7 @@
       "location" : "https://github.com/tomislaveric/http-request.git",
       "state" : {
         "branch" : "main",
-        "revision" : "d7ed2f1484bfc44a680ece3552d98830172f52ea"
+        "revision" : "a6fa794b6ebbc63edf0d1a69edb2928510a4bb0b"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/tomislaveric/keychain-storage.git",
       "state" : {
         "branch" : "main",
-        "revision" : "0368482b301ea216bb619dd32cd4d810f713f8b5"
+        "revision" : "5c323154e19a14db0d6119ae3324c9b873927f10"
       }
     },
     {
@@ -24,7 +24,7 @@
       "location" : "https://github.com/tomislaveric/oauth.git",
       "state" : {
         "branch" : "main",
-        "revision" : "ab303cb11cb23fc27a604520c9ab79c55deffef0"
+        "revision" : "df0ef13e8afc1a20d9065fdaf9019a68975007c8"
       }
     }
   ],
