@@ -45,22 +45,12 @@ public class StravaApiImpl: StravaApi {
     private let oAuth: OAuth
     private let storage: KeychainStorage
     
-    public init(config: StravaConfig, request: HTTPRequest = HTTPRequestImpl(), storage: KeychainStorage = KeychainStorageImpl()) {
-        let oAuthConfig = OAuthConfig(
-            authorizeUrl: config.authorizeUrl,
-            tokenUrl: config.tokenUrl,
-            clientId: config.clientId,
-            redirectUri: config.redirectUri,
-            callbackURLScheme: config.callbackURLScheme,
-            clientSecret: config.clientSecret,
-            responseType: config.responseType,
-            approvalPrompt: config.approvalPrompt,
-            scope: config.scope.joined(separator: ","),
-            authorizationGrant: config.authorizationGrant,
-            refreshGrant: config.refreshGrant
-        )
+    public init(oAuthClient: OAuth,
+                request: HTTPRequest = HTTPRequestImpl(),
+                storage: KeychainStorage = KeychainStorageImpl())
+    {
         self.request = request
-        self.oAuth = OAuthImpl(config: oAuthConfig)
+        self.oAuth = oAuthClient
         self.storage = storage
     }
 }

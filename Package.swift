@@ -37,6 +37,10 @@ let package = Package(
                 "StravaApi",
                 .product(name: "HTTPRequest", package: "http-request"),
                 .product(name: "OAuth", package: "oauth"),
-            ]),
+            ],
+            resources: [
+                .process("Mocks/JSON")
+            ]
+        ),
     ]
 )
