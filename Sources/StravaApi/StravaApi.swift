@@ -34,7 +34,6 @@ public class StravaApiImpl: StravaApi {
         }
         var urlRequest = URLRequest(url: url)
         if let token = try await oAuth.getAccessToken(currentToken: getSavedToken()) {
-            //TODO: Save Token
             try save(token: token)
             let url = "\(token.token_type) \(token.access_token)"
             urlRequest.addValue(url, forHTTPHeaderField: "Authorization")
