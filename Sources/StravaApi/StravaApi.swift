@@ -32,13 +32,12 @@ public class StravaApiImpl: StravaApi {
         guard let url = URL(string: "\(Endpoint.baseUrl.rawValue)\(endpoint.rawValue)") else {
             throw StravaApiError.badUrl
         }
-        var urlRequest = URLRequest(url: url)
-        if let token = try await oAuth.getAccessToken(currentToken: getSavedToken()) {
-            try save(token: token)
-            let url = "\(token.token_type) \(token.access_token)"
-            urlRequest.addValue(url, forHTTPHeaderField: "Authorization")
+        
+        guard let token = try await oAuth.getAccessToken(currentToken: getSavedToken()) else {
+            throw StravaApiError.couldNotFetchAccessToken
         }
-        return try await request.get(request: urlRequest)
+        try save(token: token)
+        return try await request.get(url: url, header: ["Authorization": "\(token.token_type) \(token.access_token)"])
     }
     
     private let request: HTTPRequest
@@ -63,4 +62,5 @@ enum Endpoint: String {
 
 enum StravaApiError: Error {
     case badUrl
+    case couldNotFetchAccessToken
 }
