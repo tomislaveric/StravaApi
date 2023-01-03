@@ -9,7 +9,7 @@ public protocol StravaApi {
 }
 
 public class StravaApiImpl: StravaApi {
-    private let storageName = Bundle.main.bundleIdentifier ?? "StravaApi"
+    private let storageName = Bundle.main.bundleIdentifier ?? "strava_api.oauth_token"
     
     private func getSavedToken() throws -> Token? {
         guard let token: Token = try self.storage.read(name: storageName) else { return nil }
