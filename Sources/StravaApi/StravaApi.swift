@@ -4,7 +4,7 @@ import OAuth
 import KeychainStorage
 
 public protocol StravaApi {
-    func getProfile() async throws -> Athlete
+    func getProfile() async throws -> DetailedAthlete
     func getUserActivities() async throws -> [DetailedActivity]
 }
 
@@ -24,7 +24,7 @@ public class StravaApiImpl: StravaApi {
         return try await handleRequest(endpoint: Endpoint.athleteActivities)
     }
     
-    public func getProfile() async throws -> Athlete {
+    public func getProfile() async throws -> DetailedAthlete {
         return try await handleRequest(endpoint: Endpoint.athlete)
     }
     

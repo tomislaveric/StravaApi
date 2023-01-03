@@ -1,9 +1,9 @@
 import Foundation
 
-// MARK: - Athlete
-/// This is a swift representation of current Athlete
-/// source: https://developers.strava.com/docs/reference/#api-models-Athlete
-public struct Athlete: Decodable, Equatable {
+// MARK: - DetailedAthlete
+/// This is a swift representation of current DetailedAthlete
+/// source: https://developers.strava.com/docs/reference/#api-models-DetailedAthlete
+public struct DetailedAthlete: Decodable, Equatable {
     ///The unique identifier of the athlete
     public let id: Double?
     ///Resource state, indicates level of detail. Possible values: 1 -> "meta", 2 -> "summary", 3 -> "detail"

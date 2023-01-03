@@ -11,7 +11,7 @@ final class StravaApiTests: XCTestCase {
             request: setupNetworkManager()
         )
         
-        let response = try requestShouldReturn(for: "/api/v3/athlete", jsonFileName: "Athlete")
+        let response = try requestShouldReturn(for: "/api/v3/athlete", jsonFileName: "DetailedAthlete")
         
         let expectation = expectation(description: "Fetching profile")
         let expected: Athlete = try JSONDecoder().decode(Athlete.self, from: response)
