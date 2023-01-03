@@ -1,6 +1,6 @@
 # StravaSwiftSDK
 
-This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS and macOS. It uses async/await for the requests. It handles the OAuth authentication with another swift package i wrote (OAuth). It will have all API endpoints implemented. And all models.
+This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS and macOS. It uses async/await for the requests. It handles the OAuth authentication with another swift package i wrote ([OAuth](https://github.com/tomislaveric/oauth)). It will have all API endpoints implemented and all models.
 
 ### Currently working API endpoints
 - [x] `GET /athlete/activities`
