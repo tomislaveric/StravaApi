@@ -9,26 +9,6 @@ public protocol StravaApi {
     func getDetailedActivity(by: Int, params: DetailedActivityParams?) async throws -> DetailedActivity
 }
 
-public struct DetailedActivityParams {
-    public let includeAllEfforts: Bool
-    public init(incldueAllEfforts: Bool = false) {
-        self.includeAllEfforts = incldueAllEfforts
-    }
-}
-
-public struct AthleteDetailedActivitiesParams {
-    public init(before: Int? = nil, after: Int? = nil, page: Int? = nil, perPage: Int? = nil) {
-        self.before = before
-        self.after = after
-        self.page = page
-        self.perPage = perPage
-    }
-    public let before: Int?
-    public let after: Int?
-    public let page: Int?
-    public let perPage: Int?
-}
-
 public class StravaApiImpl: StravaApi {
     public func getDetailedActivity(by id: Int, params: DetailedActivityParams?) async throws -> DetailedActivity {
         guard let endpoint = URL(string: Endpoint.activity(id: id)) else {
@@ -122,11 +102,9 @@ struct Endpoint {
     }
     
     static let baseUrl = "https://www.strava.com/api/v3"
-    
     static var athleteActivities: String {
         "\(self.baseUrl)/athlete/activities"
     }
-    
     static func athlete() -> String {
         "\(self.baseUrl)/athlete"
     }
