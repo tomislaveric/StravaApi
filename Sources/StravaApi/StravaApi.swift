@@ -5,8 +5,8 @@ import KeychainStorage
 
 public protocol StravaApi {
     func getDetailedAthlete() async throws -> DetailedAthlete
-    func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams) async throws -> [DetailedActivity]
-    func getDetailedActivity(by: Int, params: DetailedActivityParams) async throws -> DetailedActivity
+    func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams?) async throws -> [DetailedActivity]
+    func getDetailedActivity(by: Int, params: DetailedActivityParams?) async throws -> DetailedActivity
 }
 
 public struct DetailedActivityParams {
@@ -30,12 +30,12 @@ public struct AthleteDetailedActivitiesParams {
 }
 
 public class StravaApiImpl: StravaApi {
-    public func getDetailedActivity(by id: Int, params: DetailedActivityParams) async throws -> DetailedActivity {
+    public func getDetailedActivity(by id: Int, params: DetailedActivityParams?) async throws -> DetailedActivity {
         guard let endpoint = URL(string: Endpoint.activity(id: id)) else {
             throw StravaApiError.badUrl
         }
         var urlComponents = URLComponents(url: endpoint, resolvingAgainstBaseURL: true)
-        if params.includeAllEfforts {
+        if let params = params, params.includeAllEfforts {
             let queryItems = [URLQueryItem(name: "include_all_efforts", value: "\(params.includeAllEfforts)")]
             urlComponents?.queryItems = queryItems
         }
@@ -43,29 +43,30 @@ public class StravaApiImpl: StravaApi {
         return try await handleRequest(endpoint: urlComponents?.url)
     }
     
-    public func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams) async throws -> [DetailedActivity] {
+    public func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams?) async throws -> [DetailedActivity] {
         guard let endpoint = URL(string: Endpoint.athleteActivities) else {
             throw StravaApiError.badUrl
         }
         
         var urlComponents = URLComponents(url: endpoint, resolvingAgainstBaseURL: true)
         var queryItems: [URLQueryItem] = []
-        if let before = params.before {
-            queryItems.append(URLQueryItem(name: "before", value: "\(before)"))
+        if let params = params {
+            if let before = params.before {
+                queryItems.append(URLQueryItem(name: "before", value: "\(before)"))
+            }
+            if let after = params.after {
+                queryItems.append(URLQueryItem(name: "after", value: "\(after)"))
+            }
+            if let page = params.page {
+                queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
+            }
+            if let perPage = params.perPage {
+                queryItems.append(URLQueryItem(name: "perPage", value: "\(perPage)"))
+            }
+            if !queryItems.isEmpty {
+                urlComponents?.queryItems = queryItems
+            }
         }
-        if let after = params.after {
-            queryItems.append(URLQueryItem(name: "after", value: "\(after)"))
-        }
-        if let page = params.page {
-            queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
-        }
-        if let perPage = params.perPage {
-            queryItems.append(URLQueryItem(name: "perPage", value: "\(perPage)"))
-        }
-        if !queryItems.isEmpty {
-            urlComponents?.queryItems = queryItems
-        }
-        
         return try await handleRequest(endpoint: urlComponents?.url)
     }
     
