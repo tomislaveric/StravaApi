@@ -21,7 +21,7 @@ public struct DetailedActivity: Decodable, Equatable {
     ///The activity's elapsed time, in seconds
     public let elapsed_time: Int?
     ///The activity's total elevation gain.
-    public let total_elevation_gain: Int?
+    public let total_elevation_gain: Double?
     @available(*, deprecated, message: "Deprecated. Prefer to use sport_type")
     public let type: String?
     ///An instance of SportType.
@@ -47,7 +47,7 @@ public struct DetailedActivity: Decodable, Equatable {
     ///An instance of PolylineMap
     public let map: PolylineMap?
     ///Whether this activity was recorded on a training machine
-    public let trainer: Bool
+    public let trainer: Bool?
     ///Whether this activity is a commute
     public let commute: Bool?
     ///Whether this activity was created manually
@@ -75,13 +75,13 @@ public struct DetailedActivity: Decodable, Equatable {
     ///Average power output in watts during this activity. Rides only
     public let average_watts: Double?
     ///Rides with power meter data only
-    public let max_watt: Int
+    public let max_watts: Int?
     ///Similar to Normalized Power. Rides with power meter data only
     public let weighted_average_watts: Int?
     ///The total work done in kilojoules during this activity. Rides only
     public let kilojoules: Double?
     ///Whether the watts are from a power meter, false if estimated
-    public let device_watts: Double?
+    public let device_watts: Bool?
     ///Whether this activity was recorded with a heart rate sensor or not
     public let has_heartrate: Bool?
     ///The averate heart rate of the athlete during this activity
@@ -115,11 +115,11 @@ public struct DetailedActivity: Decodable, Equatable {
     ///The token used to embed a Strava activity
     public let embed_token: String?
     ///The splits of this activity in metric units (for runs)
-    public let splits_metric: Split?
+    public let splits_metric: [Split]?
     ///The splits of this activity in imperial units (for runs)
     public let splits_standard: Split?
     ///A collection of Lap objects.
-    public let laps: Lap?
+    public let laps: [Lap]?
     ///A collection of DetailedSegmentEffort objects.
     public let best_efforts: DetailedSegmentEffort?
 }

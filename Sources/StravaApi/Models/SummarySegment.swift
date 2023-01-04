@@ -5,7 +5,7 @@ import Foundation
 /// source: https://developers.strava.com/docs/reference/#api-models-SummarySegment
 public struct SummarySegment: Decodable, Equatable {
     ///The unique identifier of this segment
-    public let id: Double?
+    public let id: Int?
     ///The name of this segment
     public let name: String?
     ///May take one of the following values: Ride, Run

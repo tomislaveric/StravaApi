@@ -7,9 +7,9 @@ public struct Lap: Decodable, Equatable {
     ///The unique identifier of this lap
     public let id: Double?
     ///An instance of MetaActivity.
-    public let activity: MetaActivity
+    public let activity: MetaActivity?
     ///An instance of MetaAthlete.
-    public let athlete: MetaAthlete
+    public let athlete: MetaAthlete?
     ///The lap's average cadence
     public let average_cadence: Double?
     ///The lap's average speed

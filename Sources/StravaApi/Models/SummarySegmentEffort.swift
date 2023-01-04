@@ -5,7 +5,7 @@ import Foundation
 /// source: https://developers.strava.com/docs/reference/#api-models-SummarySegmentEffort
 public struct SummarySegmentEffort: Decodable, Equatable {
     ///The unique identifier of this effort
-    public let id: Double?
+    public let id: Int?
     ///The unique identifier of the activity related to this effort
     public let activity_id: Double?
     ///The effort's elapsed time

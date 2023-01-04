@@ -5,5 +5,5 @@ import Foundation
 /// source: https://developers.strava.com/docs/reference/#api-models-MetaAthlete
 public struct MetaAthlete: Decodable, Equatable {
     ///The unique identifier of the athlete
-    public let id: Double?
+    public let id: Int?
 }

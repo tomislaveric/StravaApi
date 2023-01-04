@@ -18,7 +18,7 @@ public struct SummaryClub: Decodable, Equatable {
     ///Deprecated. Prefer to use activity_types. May take one of the following values: cycling, running, triathlon, other
     public let sport_type: String?
     ///The activity types that count for a club. This takes precedence over sport_type.
-    public let activity_types: [SportType]
+    public let activity_types: [SportType]?
     ///The club's city.
     public let city: String?
     ///The club's state or geographical region.
@@ -26,7 +26,7 @@ public struct SummaryClub: Decodable, Equatable {
     ///The club's country.
     public let country: String?
     ///Whether the club is private.
-    public let `private`: Bool
+    public let `private`: Bool?
     ///The club's member count.
     public let member_count: Int?
     ///Whether the club is featured or not.

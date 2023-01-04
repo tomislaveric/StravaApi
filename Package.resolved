@@ -6,7 +6,7 @@
       "location" : "https://github.com/tomislaveric/http-request.git",
       "state" : {
         "branch" : "main",
-        "revision" : "a6fa794b6ebbc63edf0d1a69edb2928510a4bb0b"
+        "revision" : "343b0a36b2822aaa5f23181ada11ecfdfcd0322b"
       }
     },
     {
@@ -24,7 +24,7 @@
       "location" : "https://github.com/tomislaveric/oauth.git",
       "state" : {
         "branch" : "main",
-        "revision" : "8a773bf93f600f2ca561015cf6cb0ce877f3b345"
+        "revision" : "d062875616b025cb064fc6e4e86e5afef8f43834"
       }
     }
   ],

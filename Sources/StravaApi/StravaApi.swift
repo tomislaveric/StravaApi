@@ -4,13 +4,25 @@ import OAuth
 import KeychainStorage
 
 public protocol StravaApi {
-    func getProfile() async throws -> DetailedAthlete
-    func getUserActivities() async throws -> [DetailedActivity]
+    func getDetailedAthlete() async throws -> DetailedAthlete
+    func getAthleteDetailedActivities() async throws -> [DetailedActivity]
+    func getDetailedActivity(by: Int) async throws -> DetailedActivity
 }
 
 public class StravaApiImpl: StravaApi {
-    private let storageName = Bundle.main.bundleIdentifier ?? "strava_api.oauth_token"
+    public func getDetailedActivity(by id: Int) async throws -> DetailedActivity {
+        return try await handleRequest(endpoint: Endpoint.activity(id: id))
+    }
     
+    public func getAthleteDetailedActivities() async throws -> [DetailedActivity] {
+        return try await handleRequest(endpoint: Endpoint.athleteActivities)
+    }
+    
+    public func getDetailedAthlete() async throws -> DetailedAthlete {
+        return try await handleRequest(endpoint: Endpoint.athlete())
+    }
+    
+    private let storageName = Bundle.main.bundleIdentifier ?? "strava_api.oauth_token"
     private func getSavedToken() throws -> Token? {
         guard let token: Token = try self.storage.read(name: storageName) else { return nil }
         return token
@@ -20,16 +32,8 @@ public class StravaApiImpl: StravaApi {
         try self.storage.save(name: storageName, object: token)
     }
     
-    public func getUserActivities() async throws -> [DetailedActivity] {
-        return try await handleRequest(endpoint: Endpoint.athleteActivities)
-    }
-    
-    public func getProfile() async throws -> DetailedAthlete {
-        return try await handleRequest(endpoint: Endpoint.athlete)
-    }
-    
-    private func handleRequest<ReturnType: Decodable>(endpoint: Endpoint) async throws -> ReturnType {
-        guard let url = URL(string: "\(Endpoint.baseUrl.rawValue)\(endpoint.rawValue)") else {
+    private func handleRequest<ReturnType: Decodable>(endpoint: String) async throws -> ReturnType {
+        guard let url = URL(string: endpoint) else {
             throw StravaApiError.badUrl
         }
         
@@ -54,10 +58,30 @@ public class StravaApiImpl: StravaApi {
     }
 }
 
-enum Endpoint: String {
-    case baseUrl = "https://www.strava.com/api/v3"
-    case athlete = "/athlete"
-    case athleteActivities = "/athlete/activities"
+struct Endpoint {
+    enum Subtype: String {
+        case zones
+        case streams
+        case kudos
+        case comments
+    }
+    
+    static let baseUrl = "https://www.strava.com/api/v3"
+    
+    static var athleteActivities: String {
+        "\(self.baseUrl)/athlete/activities"
+    }
+    
+    static func athlete() -> String {
+        "\(self.baseUrl)/athlete"
+    }
+    static func activity(id: Int, subType: Subtype? = nil) -> String {
+        if let type = subType {
+            return "\(self.baseUrl)/activities/\(id)/\(type.rawValue)"
+        } else {
+            return "\(self.baseUrl)/activities/\(id)"
+        }
+    }
 }
 
 enum StravaApiError: Error {

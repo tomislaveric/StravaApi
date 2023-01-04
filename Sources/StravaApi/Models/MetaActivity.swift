@@ -5,5 +5,5 @@ import Foundation
 /// source: https://developers.strava.com/docs/reference/#api-models-MetaActivity
 public struct MetaActivity: Decodable, Equatable {
     ///The unique identifier of the activity
-    public let id: Double?
+    public let id: Int?
 }
