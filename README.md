@@ -6,6 +6,8 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [x] `GET /athlete/activities`
 - [x] `GET /athlete`
 - [x] `GET /activities/{id}`
+- [x] `GET /activities/{id}/zones`
+- [x] `GET /activities/{id}/laps`
 - [ ] .. TBD
 
 ### Currently added [Strava API](https://developers.strava.com/docs/reference/) Models
@@ -24,10 +26,11 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [x] SummaryClub
 - [x] DetailedActivity
 - [x] DetailedAthlete
+- [x] ActivityZone
+- [x] TimedZoneRange
+- [x] LatLng (Implemented as Double array)
 - [ ] ActivityStats
 - [ ] ActivityTotal
-- [ ] ActivityType
-- [ ] ActivityZone
 - [ ] BaseStream
 - [ ] Comment
 - [ ] Error
@@ -35,7 +38,6 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [ ] ExplorerSegment
 - [ ] Fault
 - [ ] HeartRateZoneRanges
-- [ ] LatLng
 - [ ] MetaClub
 - [ ] PhotosSummary_primary
 - [ ] PowerZoneRanges
@@ -62,5 +64,5 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [ ] SummaryAthlete
 - [ ] TemperatureStream
 - [ ] TimeStream
-- [ ] TimedZoneRange
 - [ ] DetailedClub
+- [ ] ActivityType -> (Deprecated)

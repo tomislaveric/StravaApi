@@ -57,7 +57,7 @@ final class StravaApiTests: XCTestCase {
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
-        let activityId = 8325454120
+        let activityId = 123
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)", jsonFileName: "DetailedActivity")
         
         let expectation = expectation(description: "Fetching activity with id: \(activityId)")
@@ -73,13 +73,43 @@ final class StravaApiTests: XCTestCase {
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
-        let activityId = 8325454120
+        let activityId = 123
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)?include_all_efforts=true", jsonFileName: "DetailedActivity")
         
         let expectation = expectation(description: "Fetching activity with id: \(activityId)")
         let params = DetailedActivityParams(incldueAllEfforts: true)
         let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, params: params)
         XCTAssertEqual(actual.id, activityId)
+        expectation.fulfill()
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func test_getActivityZones_shouldReturnActivityZone() async throws {
+        let sut = StravaApiImpl(
+            oAuthClient: OAuthMock(),
+            request: setupNetworkManager()
+        )
+        let activityId = 8325454120
+        try requestShouldReturn(for: "/api/v3/activities/\(activityId)/zones", jsonFileName: "ActivityZones")
+        
+        let expectation = expectation(description: "Fetching activity zones with id: \(activityId)")
+        let actual: [ActivityZone] = try await sut.getActivityZones(by: activityId)
+        XCTAssertEqual(actual.count, 2)
+        expectation.fulfill()
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func test_getActivityLaps_shouldReturnActivityZone() async throws {
+        let sut = StravaApiImpl(
+            oAuthClient: OAuthMock(),
+            request: setupNetworkManager()
+        )
+        let activityId = 8325454120
+        try requestShouldReturn(for: "/api/v3/activities/\(activityId)/laps", jsonFileName: "Laps")
+        
+        let expectation = expectation(description: "Fetching activity zones with id: \(activityId)")
+        let actual: [Lap] = try await sut.getActivityLaps(by: activityId)
+        XCTAssertEqual(actual.first?.id, 11)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
     }

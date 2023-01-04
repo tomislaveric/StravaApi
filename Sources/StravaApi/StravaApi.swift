@@ -7,9 +7,25 @@ public protocol StravaApi {
     func getDetailedAthlete() async throws -> DetailedAthlete
     func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams?) async throws -> [DetailedActivity]
     func getDetailedActivity(by: Int, params: DetailedActivityParams?) async throws -> DetailedActivity
+    func getActivityZones(by: Int) async throws -> [ActivityZone]
+    func getActivityLaps(by: Int) async throws -> [Lap]
 }
 
 public class StravaApiImpl: StravaApi {
+    public func getActivityZones(by id: Int) async throws -> [ActivityZone] {
+        guard let endpoint = URL(string: Endpoint.activity(id: id, subType: .zones)) else {
+            throw StravaApiError.badUrl
+        }
+        return try await handleRequest(endpoint: endpoint)
+    }
+    
+    public func getActivityLaps(by id: Int) async throws -> [Lap] {
+        guard let endpoint = URL(string: Endpoint.activity(id: id, subType: .laps)) else {
+            throw StravaApiError.badUrl
+        }
+        return try await handleRequest(endpoint: endpoint)
+    }
+    
     public func getDetailedActivity(by id: Int, params: DetailedActivityParams?) async throws -> DetailedActivity {
         guard let endpoint = URL(string: Endpoint.activity(id: id)) else {
             throw StravaApiError.badUrl
@@ -99,6 +115,7 @@ struct Endpoint {
         case streams
         case kudos
         case comments
+        case laps
     }
     
     static let baseUrl = "https://www.strava.com/api/v3"

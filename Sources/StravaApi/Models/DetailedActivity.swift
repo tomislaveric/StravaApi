@@ -95,7 +95,7 @@ public struct DetailedActivity: Decodable, Equatable {
     ///The activity's highest elevation, in meters
     public let elev_high: Double?
     ///The identifier of the upload that resulted in this activity
-    public let upload_id: Int?
+    public let upload_id: Double?
     ///The unique identifier of the upload in string format
     public let upload_id_str: String?
     ///The identifier provided at upload time
