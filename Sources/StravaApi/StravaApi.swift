@@ -5,21 +5,75 @@ import KeychainStorage
 
 public protocol StravaApi {
     func getDetailedAthlete() async throws -> DetailedAthlete
-    func getAthleteDetailedActivities() async throws -> [DetailedActivity]
-    func getDetailedActivity(by: Int) async throws -> DetailedActivity
+    func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams) async throws -> [DetailedActivity]
+    func getDetailedActivity(by: Int, params: DetailedActivityParams) async throws -> DetailedActivity
+}
+
+public struct DetailedActivityParams {
+    public let includeAllEfforts: Bool
+    public init(incldueAllEfforts: Bool = false) {
+        self.includeAllEfforts = incldueAllEfforts
+    }
+}
+
+public struct AthleteDetailedActivitiesParams {
+    public init(before: Int? = nil, after: Int? = nil, page: Int? = nil, perPage: Int? = nil) {
+        self.before = before
+        self.after = after
+        self.page = page
+        self.perPage = perPage
+    }
+    public let before: Int?
+    public let after: Int?
+    public let page: Int?
+    public let perPage: Int?
 }
 
 public class StravaApiImpl: StravaApi {
-    public func getDetailedActivity(by id: Int) async throws -> DetailedActivity {
-        return try await handleRequest(endpoint: Endpoint.activity(id: id))
+    public func getDetailedActivity(by id: Int, params: DetailedActivityParams) async throws -> DetailedActivity {
+        guard let endpoint = URL(string: Endpoint.activity(id: id)) else {
+            throw StravaApiError.badUrl
+        }
+        var urlComponents = URLComponents(url: endpoint, resolvingAgainstBaseURL: true)
+        if params.includeAllEfforts {
+            let queryItems = [URLQueryItem(name: "include_all_efforts", value: "\(params.includeAllEfforts)")]
+            urlComponents?.queryItems = queryItems
+        }
+        
+        return try await handleRequest(endpoint: urlComponents?.url)
     }
     
-    public func getAthleteDetailedActivities() async throws -> [DetailedActivity] {
-        return try await handleRequest(endpoint: Endpoint.athleteActivities)
+    public func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams) async throws -> [DetailedActivity] {
+        guard let endpoint = URL(string: Endpoint.athleteActivities) else {
+            throw StravaApiError.badUrl
+        }
+        
+        var urlComponents = URLComponents(url: endpoint, resolvingAgainstBaseURL: true)
+        var queryItems: [URLQueryItem] = []
+        if let before = params.before {
+            queryItems.append(URLQueryItem(name: "before", value: "\(before)"))
+        }
+        if let after = params.after {
+            queryItems.append(URLQueryItem(name: "after", value: "\(after)"))
+        }
+        if let page = params.page {
+            queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
+        }
+        if let perPage = params.perPage {
+            queryItems.append(URLQueryItem(name: "perPage", value: "\(perPage)"))
+        }
+        if !queryItems.isEmpty {
+            urlComponents?.queryItems = queryItems
+        }
+        
+        return try await handleRequest(endpoint: urlComponents?.url)
     }
     
     public func getDetailedAthlete() async throws -> DetailedAthlete {
-        return try await handleRequest(endpoint: Endpoint.athlete())
+        guard let endpoint = URL(string: Endpoint.athlete()) else {
+            throw StravaApiError.badUrl
+        }
+        return try await handleRequest(endpoint: endpoint)
     }
     
     private let storageName = Bundle.main.bundleIdentifier ?? "strava_api.oauth_token"
@@ -32,8 +86,8 @@ public class StravaApiImpl: StravaApi {
         try self.storage.save(name: storageName, object: token)
     }
     
-    private func handleRequest<ReturnType: Decodable>(endpoint: String) async throws -> ReturnType {
-        guard let url = URL(string: endpoint) else {
+    private func handleRequest<ReturnType: Decodable>(endpoint: URL?) async throws -> ReturnType {
+        guard let url = endpoint else {
             throw StravaApiError.badUrl
         }
         
