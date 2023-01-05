@@ -6,12 +6,18 @@ import OAuth
 final class StravaApiTests: XCTestCase {
     
     func test_getAthleteShouldReturn_Athlete() async throws {
-        let sut = StravaApiImpl(
-            config: StravaConfig.fixture,
-            oAuthClient: OAuthMock(),
-            request: setupNetworkManager()
-        )
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
+        try requestShouldReturn(for: "/api/v3/athlete", jsonFileName: "DetailedAthlete")
         
+        let expectation = expectation(description: "Fetching /athlete")
+        let actual: DetailedAthlete = try await sut.getDetailedAthlete()
+        XCTAssertEqual(actual.username, "marianne_t")
+        expectation.fulfill()
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func test_getAthleteShouldReturn_Athlete() async throws {
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         try requestShouldReturn(for: "/api/v3/athlete", jsonFileName: "DetailedAthlete")
         
         let expectation = expectation(description: "Fetching /athlete")
@@ -22,12 +28,7 @@ final class StravaApiTests: XCTestCase {
     }
     
     func test_getAthleteDetailedActivities_shouldReturnDetailedActivities() async throws {
-        let sut = StravaApiImpl(
-            config: StravaConfig.fixture,
-            oAuthClient: OAuthMock(),
-            request: setupNetworkManager()
-        )
-        
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         try requestShouldReturn(for: "/api/v3/athlete/activities", jsonFileName: "DetailedActivities")
         
         let expectation = expectation(description: "Fetching activities")
@@ -38,12 +39,7 @@ final class StravaApiTests: XCTestCase {
     }
     
     func test_getAthleteDetailedActivities_shouldHaveCorrectParams() async throws {
-        let sut = StravaApiImpl(
-            config: StravaConfig.fixture,
-            oAuthClient: OAuthMock(),
-            request: setupNetworkManager()
-        )
-        
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         try requestShouldReturn(for: "/api/v3/athlete/activities?before=12&after=10&page=1&per_page=20", jsonFileName: "DetailedActivities")
         
         let expectation = expectation(description: "Fetching activities")
@@ -54,11 +50,7 @@ final class StravaApiTests: XCTestCase {
     }
     
     func test_getDetailedActivity_shouldReturnActivity() async throws {
-        let sut = StravaApiImpl(
-            config: StravaConfig.fixture,
-            oAuthClient: OAuthMock(),
-            request: setupNetworkManager()
-        )
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         let activityId = 123
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)", jsonFileName: "DetailedActivity")
         
@@ -70,11 +62,7 @@ final class StravaApiTests: XCTestCase {
     }
     
     func test_getDetailedActivity_shouldHaveCorrectParams() async throws {
-        let sut = StravaApiImpl(
-            config: StravaConfig.fixture,
-            oAuthClient: OAuthMock(),
-            request: setupNetworkManager()
-        )
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         let activityId = 123
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)?include_all_efforts=true", jsonFileName: "DetailedActivity")
         
@@ -86,11 +74,7 @@ final class StravaApiTests: XCTestCase {
     }
     
     func test_getActivityZones_shouldReturnActivityZone() async throws {
-        let sut = StravaApiImpl(
-            config: StravaConfig.fixture,
-            oAuthClient: OAuthMock(),
-            request: setupNetworkManager()
-        )
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         let activityId = 8325454120
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)/zones", jsonFileName: "ActivityZones")
         
@@ -102,11 +86,7 @@ final class StravaApiTests: XCTestCase {
     }
     
     func test_getActivityLaps_shouldReturnActivityZone() async throws {
-        let sut = StravaApiImpl(
-            config: StravaConfig.fixture,
-            oAuthClient: OAuthMock(),
-            request: setupNetworkManager()
-        )
+        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         let activityId = 8325454120
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)/laps", jsonFileName: "Laps")
         

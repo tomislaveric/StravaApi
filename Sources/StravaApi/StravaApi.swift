@@ -91,10 +91,9 @@ public class StravaApiImpl: StravaApi {
     }
     
     private func getAccessToken() async throws -> Token? {
-        if let currentToken = try getSavedToken(), Date().timeIntervalSince1970 < currentToken.expires_at {
+        if let currentToken = try getSavedToken(), isValid(expiresAt: currentToken.expires_at) {
             return currentToken
-        } else if let currentToken = try getSavedToken() {
-            guard let refreshUrl = buildRefreshTokenUrl(from: currentToken) else { return nil }
+        } else if let currentToken = try getSavedToken(), let refreshUrl = buildRefreshTokenUrl(from: currentToken) {
             return try await oAuth.refreshToken(refreshUrl: refreshUrl)
         } else {
             guard let authUrl = buildAuthUrl(from: self.config) else { return nil }
@@ -102,6 +101,10 @@ public class StravaApiImpl: StravaApi {
             let accessUrl = buildAccessTokenUrl(from: authResponse)
             return try await oAuth.getAccessToken(currentToken: nil, accessUrl: accessUrl)
         }
+    }
+    
+    private func isValid(expiresAt: Double) -> Bool {
+        return Date().timeIntervalSince1970 < expiresAt
     }
     
     // MARK: Initializer and Properties

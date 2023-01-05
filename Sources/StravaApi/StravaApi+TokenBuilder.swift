@@ -4,7 +4,6 @@ extension StravaApiImpl {
     func buildAccessTokenUrl(from authResponse: URL) -> URL? {
         guard let authComponents = URLComponents(url: authResponse, resolvingAgainstBaseURL: true) else { return nil }
         let authToken = authComponents.queryItems?.first(where: { $0.name == self.config.responseType })?.value
-        
         var components = URLComponents(string: config.tokenUrl)
         components?.queryItems = [
             URLQueryItem(name: "client_id", value: config.clientId),
