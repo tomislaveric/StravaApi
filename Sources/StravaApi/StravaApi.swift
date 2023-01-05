@@ -12,6 +12,7 @@ public protocol StravaApi {
 }
 
 public class StravaApiImpl: StravaApi {
+    // MARK: Protocol functions
     public func getActivityZones(by id: Int) async throws -> [ActivityZone] {
         guard let endpoint = URL(string: Endpoint.activity(id: id, subType: .zones)) else {
             throw StravaApiError.badUrl
@@ -46,6 +47,8 @@ public class StravaApiImpl: StravaApi {
         }
         return try await handleRequest(endpoint: endpoint)
     }
+    
+    // MARK: Private functions
     
     private func handleRequestForParamRequests<ReturnType: Decodable>(url: URL, params: KeyValuePairs<String, Any>?) async throws -> ReturnType {
        
@@ -92,9 +95,7 @@ public class StravaApiImpl: StravaApi {
             return currentToken
         } else if let currentToken = try getSavedToken() {
             guard let refreshUrl = buildRefreshTokenUrl(from: currentToken) else { return nil }
-            let updatedToken: Token = try await oAuth.refreshToken(refreshUrl: refreshUrl)
-            try save(token: updatedToken)
-            return updatedToken
+            return try await oAuth.refreshToken(refreshUrl: refreshUrl)
         } else {
             guard let authUrl = buildAuthUrl(from: self.config) else { return nil }
             let authResponse = try await oAuth.authorize(authUrl: authUrl)
@@ -103,55 +104,14 @@ public class StravaApiImpl: StravaApi {
         }
     }
     
-    private func buildAccessTokenUrl(from authResponse: URL) -> URL? {
-        guard let authComponents = URLComponents(url: authResponse, resolvingAgainstBaseURL: true) else { return nil }
-        let authToken = authComponents.queryItems?.first(where: { $0.name == self.config.responseType })?.value
-        
-        var components = URLComponents(string: config.tokenUrl)
-        components?.queryItems = [
-            URLQueryItem(name: "client_id", value: config.clientId),
-            URLQueryItem(name: "client_secret", value: config.clientSecret),
-            URLQueryItem(name: "code", value: authToken),
-            URLQueryItem(name: "scope", value: config.scope),
-            URLQueryItem(name: "grant_type", value: config.authorizationGrant)
-        ]
-        return components?.url
-    }
-    
-    private func buildRefreshTokenUrl<TokenType: Decodable>(from token: TokenType) -> URL? {
-        guard let token = token as? Token else { return nil }
-        var components = URLComponents(string: config.tokenUrl)
-        components?.queryItems = [
-            URLQueryItem(name: "client_id", value: config.clientId),
-            URLQueryItem(name: "client_secret", value: config.clientSecret),
-            URLQueryItem(name: "refresh_token", value: token.refresh_token),
-            URLQueryItem(name: "grant_type", value: config.refreshGrant)
-        ]
-        return components?.url
-    }
-    
-    private func buildAuthUrl(from config: StravaConfig) -> URL? {
-        var components = URLComponents(string: config.authorizeUrl)
-        components?.queryItems = [
-            URLQueryItem(name: "client_id", value: config.clientId),
-            URLQueryItem(name: "redirect_uri", value: config.redirectUri),
-            URLQueryItem(name: "response_type", value: config.responseType),
-            URLQueryItem(name: "scope", value: config.scope)
-        ]
-        return components?.url
-    }
+    // MARK: Initializer and Properties
     
     private let request: HTTPRequest
     private let oAuth: OAuth
     private let storage: KeychainStorage
-    private let config: StravaConfig
+    let config: StravaConfig
     
-    public init(
-        config: StravaConfig,
-        oAuthClient: OAuth,
-        request: HTTPRequest = HTTPRequestImpl(),
-        storage: KeychainStorage = KeychainStorageImpl())
-    {
+    public init(config: StravaConfig, oAuthClient: OAuth, request: HTTPRequest = HTTPRequestImpl(), storage: KeychainStorage = KeychainStorageImpl()) {
         self.config = config
         self.request = request
         self.oAuth = oAuthClient
