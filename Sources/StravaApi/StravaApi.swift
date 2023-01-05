@@ -80,25 +80,123 @@ public class StravaApiImpl: StravaApi {
             throw StravaApiError.badUrl
         }
         
-        guard let token = try await oAuth.getAccessToken(currentToken: getSavedToken()) else {
+        guard let token = try await getAccessToken() else {
             throw StravaApiError.couldNotFetchAccessToken
         }
         try save(token: token)
         return try await request.get(url: url, header: ["Authorization": "\(token.token_type) \(token.access_token)"])
     }
     
+    private func getAccessToken() async throws -> Token? {
+        if let currentToken = try getSavedToken(), Date().timeIntervalSince1970 < currentToken.expires_at {
+            return currentToken
+        } else if let currentToken = try getSavedToken() {
+            guard let refreshUrl = buildRefreshTokenUrl(from: currentToken) else { return nil }
+            let updatedToken: Token = try await oAuth.refreshToken(refreshUrl: refreshUrl)
+            try save(token: updatedToken)
+            return updatedToken
+        } else {
+            guard let authUrl = buildAuthUrl(from: self.config) else { return nil }
+            let authResponse = try await oAuth.authorize(authUrl: authUrl)
+            let accessUrl = buildAccessTokenUrl(from: authResponse)
+            return try await oAuth.getAccessToken(currentToken: nil, accessUrl: accessUrl)
+        }
+    }
+    
+    private func buildAccessTokenUrl(from authResponse: URL) -> URL? {
+        guard let authComponents = URLComponents(url: authResponse, resolvingAgainstBaseURL: true) else { return nil }
+        let authToken = authComponents.queryItems?.first(where: { $0.name == self.config.responseType })?.value
+        
+        var components = URLComponents(string: config.tokenUrl)
+        components?.queryItems = [
+            URLQueryItem(name: "client_id", value: config.clientId),
+            URLQueryItem(name: "client_secret", value: config.clientSecret),
+            URLQueryItem(name: "code", value: authToken),
+            URLQueryItem(name: "scope", value: config.scope),
+            URLQueryItem(name: "grant_type", value: config.authorizationGrant)
+        ]
+        return components?.url
+    }
+    
+    private func buildRefreshTokenUrl<TokenType: Decodable>(from token: TokenType) -> URL? {
+        guard let token = token as? Token else { return nil }
+        var components = URLComponents(string: config.tokenUrl)
+        components?.queryItems = [
+            URLQueryItem(name: "client_id", value: config.clientId),
+            URLQueryItem(name: "client_secret", value: config.clientSecret),
+            URLQueryItem(name: "refresh_token", value: token.refresh_token),
+            URLQueryItem(name: "grant_type", value: config.refreshGrant)
+        ]
+        return components?.url
+    }
+    
+    private func buildAuthUrl(from config: StravaConfig) -> URL? {
+        var components = URLComponents(string: config.authorizeUrl)
+        components?.queryItems = [
+            URLQueryItem(name: "client_id", value: config.clientId),
+            URLQueryItem(name: "redirect_uri", value: config.redirectUri),
+            URLQueryItem(name: "response_type", value: config.responseType),
+            URLQueryItem(name: "scope", value: config.scope)
+        ]
+        return components?.url
+    }
+    
     private let request: HTTPRequest
     private let oAuth: OAuth
     private let storage: KeychainStorage
+    private let config: StravaConfig
     
-    public init(oAuthClient: OAuth,
-                request: HTTPRequest = HTTPRequestImpl(),
-                storage: KeychainStorage = KeychainStorageImpl())
+    public init(
+        config: StravaConfig,
+        oAuthClient: OAuth,
+        request: HTTPRequest = HTTPRequestImpl(),
+        storage: KeychainStorage = KeychainStorageImpl())
     {
+        self.config = config
         self.request = request
         self.oAuth = oAuthClient
         self.storage = storage
     }
+}
+
+public struct StravaConfig {
+    public init(
+        authorizeUrl: String,
+        tokenUrl: String,
+        clientId: String,
+        redirectUri: String,
+        callbackURLScheme: String,
+        clientSecret: String,
+        responseType: String,
+        approvalPrompt: String,
+        scope: String,
+        authorizationGrant: String,
+        refreshGrant: String
+    ) {
+        self.authorizeUrl = authorizeUrl
+        self.tokenUrl = tokenUrl
+        self.clientId = clientId
+        self.redirectUri = redirectUri
+        self.callbackURLScheme = callbackURLScheme
+        self.clientSecret = clientSecret
+        self.responseType = responseType
+        self.approvalPrompt = approvalPrompt
+        self.scope = scope
+        self.authorizationGrant = authorizationGrant
+        self.refreshGrant = refreshGrant
+    }
+    
+    public let authorizeUrl: String
+    public let tokenUrl: String
+    public let clientId: String
+    public let redirectUri: String
+    public let callbackURLScheme: String
+    public let clientSecret: String
+    public let responseType: String
+    public let approvalPrompt: String
+    public let scope: String
+    public let authorizationGrant: String
+    public let refreshGrant: String
 }
 
 struct Endpoint {

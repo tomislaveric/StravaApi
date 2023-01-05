@@ -7,6 +7,7 @@ final class StravaApiTests: XCTestCase {
     
     func test_getAthleteShouldReturn_Athlete() async throws {
         let sut = StravaApiImpl(
+            config: StravaConfig.fixture,
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
@@ -22,6 +23,7 @@ final class StravaApiTests: XCTestCase {
     
     func test_getAthleteDetailedActivities_shouldReturnDetailedActivities() async throws {
         let sut = StravaApiImpl(
+            config: StravaConfig.fixture,
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
@@ -37,6 +39,7 @@ final class StravaApiTests: XCTestCase {
     
     func test_getAthleteDetailedActivities_shouldHaveCorrectParams() async throws {
         let sut = StravaApiImpl(
+            config: StravaConfig.fixture,
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
@@ -52,6 +55,7 @@ final class StravaApiTests: XCTestCase {
     
     func test_getDetailedActivity_shouldReturnActivity() async throws {
         let sut = StravaApiImpl(
+            config: StravaConfig.fixture,
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
@@ -67,6 +71,7 @@ final class StravaApiTests: XCTestCase {
     
     func test_getDetailedActivity_shouldHaveCorrectParams() async throws {
         let sut = StravaApiImpl(
+            config: StravaConfig.fixture,
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
@@ -82,6 +87,7 @@ final class StravaApiTests: XCTestCase {
     
     func test_getActivityZones_shouldReturnActivityZone() async throws {
         let sut = StravaApiImpl(
+            config: StravaConfig.fixture,
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
@@ -97,6 +103,7 @@ final class StravaApiTests: XCTestCase {
     
     func test_getActivityLaps_shouldReturnActivityZone() async throws {
         let sut = StravaApiImpl(
+            config: StravaConfig.fixture,
             oAuthClient: OAuthMock(),
             request: setupNetworkManager()
         )
@@ -124,4 +131,8 @@ final class StravaApiTests: XCTestCase {
 
 enum FileLoadError: Error {
     case couldNotFindFile
+}
+
+extension StravaConfig {
+    static let fixture = StravaConfig(authorizeUrl: "", tokenUrl: "", clientId: "", redirectUri: "", callbackURLScheme: "", clientSecret: "", responseType: "", approvalPrompt: "", scope: "", authorizationGrant: "", refreshGrant: "")
 }

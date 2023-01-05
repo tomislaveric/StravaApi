@@ -17,15 +17,6 @@
         "branch" : "main",
         "revision" : "5c323154e19a14db0d6119ae3324c9b873927f10"
       }
-    },
-    {
-      "identity" : "oauth",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tomislaveric/oauth.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "d062875616b025cb064fc6e4e86e5afef8f43834"
-      }
     }
   ],
   "version" : 2
