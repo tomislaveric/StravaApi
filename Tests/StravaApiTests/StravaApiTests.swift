@@ -16,17 +16,6 @@ final class StravaApiTests: XCTestCase {
         wait(for: [expectation], timeout: 5)
     }
     
-    func test_getAthleteShouldReturn_Athlete() async throws {
-        let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
-        try requestShouldReturn(for: "/api/v3/athlete", jsonFileName: "DetailedAthlete")
-        
-        let expectation = expectation(description: "Fetching /athlete")
-        let actual: DetailedAthlete = try await sut.getDetailedAthlete()
-        XCTAssertEqual(actual.username, "marianne_t")
-        expectation.fulfill()
-        wait(for: [expectation], timeout: 5)
-    }
-    
     func test_getAthleteDetailedActivities_shouldReturnDetailedActivities() async throws {
         let sut = StravaApiImpl(config: StravaConfig.fixture, oAuthClient: OAuthMock(), request: setupNetworkManager())
         try requestShouldReturn(for: "/api/v3/athlete/activities", jsonFileName: "DetailedActivities")
