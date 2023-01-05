@@ -5,8 +5,8 @@ import KeychainStorage
 
 public protocol StravaApi {
     func getDetailedAthlete() async throws -> DetailedAthlete
-    func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams?) async throws -> [DetailedActivity]
-    func getDetailedActivity(by: Int, params: DetailedActivityParams?) async throws -> DetailedActivity
+    func getAthleteDetailedActivities(params: KeyValuePairs<String, Any>?) async throws -> [DetailedActivity]
+    func getDetailedActivity(by: Int, params: KeyValuePairs<String, Any>?) async throws -> DetailedActivity
     func getActivityZones(by: Int) async throws -> [ActivityZone]
     func getActivityLaps(by: Int) async throws -> [Lap]
 }
@@ -26,44 +26,18 @@ public class StravaApiImpl: StravaApi {
         return try await handleRequest(endpoint: endpoint)
     }
     
-    public func getDetailedActivity(by id: Int, params: DetailedActivityParams?) async throws -> DetailedActivity {
+    public func getDetailedActivity(by id: Int, params: KeyValuePairs<String, Any>?) async throws -> DetailedActivity {
         guard let endpoint = URL(string: Endpoint.activity(id: id)) else {
             throw StravaApiError.badUrl
         }
-        var urlComponents = URLComponents(url: endpoint, resolvingAgainstBaseURL: true)
-        if let params = params, params.includeAllEfforts {
-            let queryItems = [URLQueryItem(name: "include_all_efforts", value: "\(params.includeAllEfforts)")]
-            urlComponents?.queryItems = queryItems
-        }
-        
-        return try await handleRequest(endpoint: urlComponents?.url)
+        return try await handleRequestForParamRequests(url: endpoint, params: params)
     }
     
-    public func getAthleteDetailedActivities(params: AthleteDetailedActivitiesParams?) async throws -> [DetailedActivity] {
+    public func getAthleteDetailedActivities(params: KeyValuePairs<String, Any>?) async throws -> [DetailedActivity] {
         guard let endpoint = URL(string: Endpoint.athleteActivities) else {
             throw StravaApiError.badUrl
         }
-        
-        var urlComponents = URLComponents(url: endpoint, resolvingAgainstBaseURL: true)
-        var queryItems: [URLQueryItem] = []
-        if let params = params {
-            if let before = params.before {
-                queryItems.append(URLQueryItem(name: "before", value: "\(before)"))
-            }
-            if let after = params.after {
-                queryItems.append(URLQueryItem(name: "after", value: "\(after)"))
-            }
-            if let page = params.page {
-                queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
-            }
-            if let perPage = params.perPage {
-                queryItems.append(URLQueryItem(name: "perPage", value: "\(perPage)"))
-            }
-            if !queryItems.isEmpty {
-                urlComponents?.queryItems = queryItems
-            }
-        }
-        return try await handleRequest(endpoint: urlComponents?.url)
+        return try await handleRequestForParamRequests(url: endpoint, params: params)
     }
     
     public func getDetailedAthlete() async throws -> DetailedAthlete {
@@ -71,6 +45,24 @@ public class StravaApiImpl: StravaApi {
             throw StravaApiError.badUrl
         }
         return try await handleRequest(endpoint: endpoint)
+    }
+    
+    private func handleRequestForParamRequests<ReturnType: Decodable>(url: URL, params: KeyValuePairs<String, Any>?) async throws -> ReturnType {
+       
+        if params == nil {
+            return try await handleRequest(endpoint: url)
+        }
+        return try await handleRequest(endpoint: set(params: params, for: url))
+    }
+    
+    private func set(params: KeyValuePairs<String, Any>?, for endpoint: URL) -> URL? {
+        var urlComponents = URLComponents(url: endpoint, resolvingAgainstBaseURL: true)
+        var queryItems: [URLQueryItem] = []
+        params?.forEach { param in
+            queryItems.append(URLQueryItem(name: "\(param.key)", value: "\(param.value)"))
+        }
+        urlComponents?.queryItems = !queryItems.isEmpty ? queryItems : nil
+        return urlComponents?.url
     }
     
     private let storageName = Bundle.main.bundleIdentifier ?? "strava_api.oauth_token"

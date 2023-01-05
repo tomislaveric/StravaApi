@@ -29,8 +29,7 @@ final class StravaApiTests: XCTestCase {
         try requestShouldReturn(for: "/api/v3/athlete/activities", jsonFileName: "DetailedActivities")
         
         let expectation = expectation(description: "Fetching activities")
-        let params = AthleteDetailedActivitiesParams()
-        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities(params: params)
+        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities(params: nil)
         XCTAssertEqual(actual.count, 2)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
@@ -42,11 +41,10 @@ final class StravaApiTests: XCTestCase {
             request: setupNetworkManager()
         )
         
-        try requestShouldReturn(for: "/api/v3/athlete/activities?before=12&after=10&page=1&perPage=20", jsonFileName: "DetailedActivities")
+        try requestShouldReturn(for: "/api/v3/athlete/activities?before=12&after=10&page=1&per_page=20", jsonFileName: "DetailedActivities")
         
         let expectation = expectation(description: "Fetching activities")
-        let params = AthleteDetailedActivitiesParams(before: 12, after: 10, page: 1, perPage: 20)
-        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities(params: params)
+        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities(params: ["before": 12, "after": 10, "page": 1, "per_page": 20])
         XCTAssertEqual(actual.count, 2)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
@@ -61,8 +59,7 @@ final class StravaApiTests: XCTestCase {
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)", jsonFileName: "DetailedActivity")
         
         let expectation = expectation(description: "Fetching activity with id: \(activityId)")
-        let params = DetailedActivityParams()
-        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, params: params)
+        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, params: nil)
         XCTAssertEqual(actual.id, activityId)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
@@ -77,8 +74,7 @@ final class StravaApiTests: XCTestCase {
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)?include_all_efforts=true", jsonFileName: "DetailedActivity")
         
         let expectation = expectation(description: "Fetching activity with id: \(activityId)")
-        let params = DetailedActivityParams(incldueAllEfforts: true)
-        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, params: params)
+        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, params: ["include_all_efforts":true])
         XCTAssertEqual(actual.id, activityId)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
