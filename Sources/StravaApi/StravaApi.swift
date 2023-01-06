@@ -42,7 +42,7 @@ public protocol StravaApi {
     ///   - page_size: (Int) Number of items per page. Defaults to 30.
     ///   - after_cursor: (String) Cursor of the last item in the previous page of results, used to request the subsequent page of results. When omitted, the first page of results is fetched.
     /// - Returns: Array of ``Comment``
-    func getActivityComments(by: Int) async throws -> [Lap]
+    func getActivityComments(by: Int) async throws -> [Comment]
 }
 
 public class StravaApiImpl: StravaApi {

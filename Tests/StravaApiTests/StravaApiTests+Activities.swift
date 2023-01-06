@@ -80,7 +80,7 @@ extension StravaApiTests {
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)/comments", jsonFileName: "Comments")
         
         let expectation = expectation(description: "Fetching activity comments with id: \(activityId)")
-        let actual: [Lap] = try await sut.getActivityComments(by: activityId)
+        let actual: [Comment] = try await sut.getActivityComments(by: activityId)
         XCTAssertEqual(actual.first?.id, 12345678987654320)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)

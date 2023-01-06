@@ -32,7 +32,7 @@ extension StravaApiImpl {
         return try await handleRequest(url: endpoint, params: params)
     }
     
-    public func getActivityComments(by id: Int) async throws -> [Lap] {
+    public func getActivityComments(by id: Int) async throws -> [Comment] {
         guard let endpoint = URL(string: Endpoint.activity(id: id, subType: .comments)) else {
             throw StravaApiError.badUrl
         }
