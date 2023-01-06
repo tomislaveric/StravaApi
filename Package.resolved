@@ -10,15 +10,6 @@
       }
     },
     {
-      "identity" : "keychain-storage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tomislaveric/keychain-storage.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "5c323154e19a14db0d6119ae3324c9b873927f10"
-      }
-    },
-    {
       "identity" : "oauth",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tomislaveric/oauth.git",
