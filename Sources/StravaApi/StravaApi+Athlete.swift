@@ -19,7 +19,7 @@ extension StravaApiImpl {
         return try await handleRequest(url: endpoint)
     }
     
-    public func getAthleteStats(by id: Int) async throws -> [ActivityStats] {
+    public func getAthleteStats(by id: Int) async throws -> ActivityStats {
         guard let endpoint = URL(string: Endpoint.athlete(id: id, subType: .stats)) else {
             throw StravaApiError.badUrl
         }

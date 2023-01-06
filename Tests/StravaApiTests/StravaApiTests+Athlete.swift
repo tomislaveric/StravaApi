@@ -25,4 +25,16 @@ extension StravaApiTests {
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
     }
+    
+    func test_getAthleteStatsShouldReturn_ActivityStats() async throws {
+        let sut = try createSUT()
+        try requestShouldReturn(for: "/api/v3/athlete/12/stats", jsonFileName: "ActivityStats")
+        
+        let expectation = expectation(description: "Fetching /athlete")
+        let actual: ActivityStats = try await sut.getAthleteStats(by: 12)
+        XCTAssertEqual(actual.biggest_ride_distance, 127)
+        XCTAssertEqual(actual.recent_ride_totals?.count, 2)
+        expectation.fulfill()
+        wait(for: [expectation], timeout: 5)
+    }
 }

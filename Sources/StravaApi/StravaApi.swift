@@ -54,7 +54,7 @@ public protocol StravaApi {
     /// - Parameters:
     ///   - id: (Int) **required** The identifier of the athlete. Must match the authenticated athlete.
     /// - Returns: ``ActivityStats``
-    func getAthleteStats(by: Int) async throws -> [ActivityStats]
+    func getAthleteStats(by: Int) async throws -> ActivityStats
 }
 
 public class StravaApiImpl: StravaApi {
