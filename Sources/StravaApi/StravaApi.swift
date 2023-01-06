@@ -12,6 +12,7 @@ public protocol StravaApi {
 }
 
 public class StravaApiImpl: StravaApi {
+     
     // MARK: Protocol functions
     public func getActivityZones(by id: Int) async throws -> [ActivityZone] {
         guard let endpoint = URL(string: Endpoint.activity(id: id, subType: .zones)) else {
@@ -130,11 +131,7 @@ public struct StravaConfig {
         redirectUri: String,
         callbackURLScheme: String,
         clientSecret: String,
-        responseType: String,
-        approvalPrompt: String,
-        scope: String,
-        authorizationGrant: String,
-        refreshGrant: String
+        scope: String
     ) {
         self.authorizeUrl = authorizeUrl
         self.tokenUrl = tokenUrl
@@ -142,11 +139,7 @@ public struct StravaConfig {
         self.redirectUri = redirectUri
         self.callbackURLScheme = callbackURLScheme
         self.clientSecret = clientSecret
-        self.responseType = responseType
-        self.approvalPrompt = approvalPrompt
         self.scope = scope
-        self.authorizationGrant = authorizationGrant
-        self.refreshGrant = refreshGrant
     }
     
     public let authorizeUrl: String
@@ -155,11 +148,11 @@ public struct StravaConfig {
     public let redirectUri: String
     public let callbackURLScheme: String
     public let clientSecret: String
-    public let responseType: String
-    public let approvalPrompt: String
     public let scope: String
-    public let authorizationGrant: String
-    public let refreshGrant: String
+    public let responseType: String = "code"
+    public let approvalPrompt: String = "auto"
+    public let authorizationGrant: String = "authorization_code"
+    public let refreshGrant: String = "refresh_token"
 }
 
 struct Endpoint {

@@ -103,5 +103,5 @@ enum FileLoadError: Error {
 }
 
 extension StravaConfig {
-    static let fixture = StravaConfig(authorizeUrl: "", tokenUrl: "", clientId: "", redirectUri: "", callbackURLScheme: "", clientSecret: "", responseType: "", approvalPrompt: "", scope: "", authorizationGrant: "", refreshGrant: "")
+    static let fixture = StravaConfig(authorizeUrl: "", tokenUrl: "", clientId: "", redirectUri: "", callbackURLScheme: "", clientSecret: "", scope: "")
 }
