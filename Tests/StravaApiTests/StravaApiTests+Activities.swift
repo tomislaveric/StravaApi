@@ -85,4 +85,17 @@ extension StravaApiTests {
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
     }
+    
+    func test_getActivityKudos_shouldReturnKudos() async throws {
+        let sut = try createSUT()
+        let activityId = 8325454120
+        try requestShouldReturn(for: "/api/v3/activities/\(activityId)/kudos", jsonFileName: "Kudos")
+        
+        let expectation = expectation(description: "Fetching activity comments with id: \(activityId)")
+        let actual: [Kudo] = try await sut.getActivityKudos(by: activityId)
+        XCTAssertEqual(actual.count, 1)
+        XCTAssertEqual(actual.first?.firstname, "Peter")
+        expectation.fulfill()
+        wait(for: [expectation], timeout: 5)
+    }
 }
