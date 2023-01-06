@@ -2,13 +2,15 @@
 
 This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS and macOS. It uses async/await for the requests. It handles the OAuth authentication with another swift package i wrote ([OAuth](https://github.com/tomislaveric/oauth)). It will have all API endpoints implemented and all models.
 
+>In the beginning i just wanted to use two Strava endpoints for my fun side project, but now i ended up implementing the whole API :). If you would like to contribute, i would really appreciate it!
+
 ## API Endpoints
-### Athlete related endpoints
+### Athletes
 - [x] `GET /athlete`
 - [x] `GET /athlete/zones`
-- [ ] `GET /athlete/{id}/stats`
+- [x] `GET /athlete/{id}/stats`
 - [ ] `PUT /athlete`
-### Activities related endpoints 
+### Activities
 - [x] `GET /athlete/activities`
 - [x] `GET /activities/{id}`
 - [x] `GET /activities/{id}/zones`
@@ -17,7 +19,21 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [x] `GET /activities/{id}/kudos`
 - [ ] `POST /activities`
 - [ ] `PUT /activities/{id}`
-- [ ] .. and more TBD
+
+### Segments
+... To be done
+### SegmentEfforts
+... To be done
+### Clubs
+... To be done
+### Gears
+... To be done
+### Routes
+... To be done
+### Uploads
+... To be done
+### Streams
+... To be done
 
 ## Currently added [Strava API](https://developers.strava.com/docs/reference/) Models
 - [x] Lap
@@ -41,8 +57,8 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [x] Comment
 - [x] SummaryAthlete
 - [x] Kudo
-- [ ] ActivityStats
-- [ ] ActivityTotal
+- [x] ActivityStats
+- [x] ActivityTotal
 - [ ] BaseStream
 - [ ] Error
 - [ ] ExplorerResponse
