@@ -1,9 +1,9 @@
 import HTTPRequest
 import Foundation
 import OAuth
-import KeychainStorage
 
 public protocol StravaApi {
+    func registerTokenUpdate(current: Token?, callback: @escaping (Token) throws -> Void)
     func getDetailedAthlete() async throws -> DetailedAthlete
     func getAthleteDetailedActivities(params: KeyValuePairs<String, Any>?) async throws -> [DetailedActivity]
     func getDetailedActivity(by: Int, params: KeyValuePairs<String, Any>?) async throws -> DetailedActivity
@@ -12,7 +12,14 @@ public protocol StravaApi {
 }
 
 public class StravaApiImpl: StravaApi {
-     
+    public func registerTokenUpdate(current: Token?, callback: @escaping (Token) throws -> Void) {
+        self.currentToken = current
+        self.callback = callback
+    }
+    
+    private var currentToken: Token?
+    private var callback: (Token) throws -> Void = { _ in }
+
     // MARK: Protocol functions
     public func getActivityZones(by id: Int) async throws -> [ActivityZone] {
         guard let endpoint = URL(string: Endpoint.activity(id: id, subType: .zones)) else {
@@ -69,14 +76,9 @@ public class StravaApiImpl: StravaApi {
         return urlComponents?.url
     }
     
-    private let storageName = Bundle.main.bundleIdentifier ?? "strava_api.oauth_token"
     private func getSavedToken() throws -> Token? {
-        guard let token: Token = try self.storage.read(name: storageName) else { return nil }
+        guard let token = currentToken else { return nil }
         return token
-    }
-    
-    private func save(token: Token) throws {
-        try self.storage.save(name: storageName, object: token)
     }
     
     private func handleRequest<ReturnType: Decodable>(endpoint: URL?) async throws -> ReturnType {
@@ -87,7 +89,8 @@ public class StravaApiImpl: StravaApi {
         guard let token = try await getAccessToken() else {
             throw StravaApiError.couldNotFetchAccessToken
         }
-        try save(token: token)
+        try callback(token)
+        self.currentToken = token
         return try await request.get(url: url, header: ["Authorization": "\(token.token_type) \(token.access_token)"])
     }
     
@@ -112,14 +115,12 @@ public class StravaApiImpl: StravaApi {
     
     private let request: HTTPRequest
     private let oAuth: OAuth
-    private let storage: KeychainStorage
     let config: StravaConfig
     
-    public init(config: StravaConfig, oAuthClient: OAuth, request: HTTPRequest = HTTPRequestImpl(), storage: KeychainStorage = KeychainStorageImpl()) {
+    public init(config: StravaConfig, oAuthClient: OAuth, request: HTTPRequest = HTTPRequestImpl()) {
         self.config = config
         self.request = request
         self.oAuth = oAuthClient
-        self.storage = storage
     }
 }
 
