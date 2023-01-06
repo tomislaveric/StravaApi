@@ -43,10 +43,17 @@ public protocol StravaApi {
     ///   - after_cursor: (String) Cursor of the last item in the previous page of results, used to request the subsequent page of results. When omitted, the first page of results is fetched.
     /// - Returns: Array of ``Comment``
     func getActivityComments(by: Int) async throws -> [Comment]
+    /// Returns the athletes who kudoed an activity identified by an identifier. Requires activity:read for Everyone and Followers activities. Requires activity:read_all for Only Me activities.
+    /// - Parameters:
+    ///   - id: (Int)  **required** The identifier of the activity.
+    ///   - page: (Int) Page number. Defaults to 1.
+    ///   - per_page: (Int) Number of items per page. Defaults to 30.
+    /// - Returns: Array of ``Kudo``
+    func getActivityKudos(by: Int) async throws -> [Kudo]
 }
 
 public class StravaApiImpl: StravaApi {
-        
+  
     // MARK: Initializer and Properties
     private let request: HTTPRequest
     private let oAuth: OAuth

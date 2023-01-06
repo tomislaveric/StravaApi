@@ -38,4 +38,11 @@ extension StravaApiImpl {
         }
         return try await handleRequest(url: endpoint)
     }
+    
+    public func getActivityKudos(by id: Int) async throws -> [Kudo] {
+        guard let endpoint = URL(string: Endpoint.activity(id: id, subType: .kudos)) else {
+            throw StravaApiError.badUrl
+        }
+        return try await handleRequest(url: endpoint)
+    }
 }
