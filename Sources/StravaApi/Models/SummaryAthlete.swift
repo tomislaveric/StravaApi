@@ -1,6 +1,6 @@
 import Foundation
 
-struct SummaryAthlete: Decodable, Equatable {
+public struct SummaryAthlete: Decodable, Equatable {
     /// The unique identifier of the athlete
     public let id: Double?
     /// Resource state, indicates level of detail. Possible values: 1 -> "meta", 2 -> "summary", 3 -> "detail"
@@ -21,7 +21,7 @@ struct SummaryAthlete: Decodable, Equatable {
     public let country: String?
     /// The athlete's sex. May take one of the following values: M, F
     public let sex: String?
-    @available(*, deprecated: "Deprecated. Use summit field instead. Whether the athlete has any Summit subscription.")
+    @available(*, deprecated, message: "Deprecated. Use summit field instead. Whether the athlete has any Summit subscription.")
     public let premium: Bool?
     /// Whether the athlete has any Summit subscription.
     public let summit: Bool?
