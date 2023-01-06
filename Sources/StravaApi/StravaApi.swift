@@ -50,10 +50,15 @@ public protocol StravaApi {
     ///   - per_page: (Int) Number of items per page. Defaults to 30.
     /// - Returns: Array of ``Kudo``
     func getActivityKudos(by: Int) async throws -> [Kudo]
+    /// Returns the activity stats of an athlete. Only includes data from activities set to Everyone visibilty.
+    /// - Parameters:
+    ///   - id: (Int) **required** The identifier of the athlete. Must match the authenticated athlete.
+    /// - Returns: ``ActivityStats``
+    func getAthleteStats(by: Int) async throws -> [ActivityStats]
 }
 
 public class StravaApiImpl: StravaApi {
-  
+
     // MARK: Initializer and Properties
     private let request: HTTPRequest
     private let oAuth: OAuth
