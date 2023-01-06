@@ -5,6 +5,7 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 ### Currently working API endpoints
 - [x] `GET /athlete/activities`
 - [x] `GET /athlete`
+- [x] `GET /athlete/zones`
 - [x] `GET /activities/{id}`
 - [x] `GET /activities/{id}/zones`
 - [x] `GET /activities/{id}/laps`
