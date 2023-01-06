@@ -5,6 +5,7 @@ import OAuth
 public protocol StravaApi {
     func registerTokenUpdate(current: Token?, callback: @escaping (Token) throws -> Void)
     func getDetailedAthlete() async throws -> DetailedAthlete
+    func getAthleteZones() async throws -> [ActivityZone]
     func getAthleteDetailedActivities(params: KeyValuePairs<String, Any>?) async throws -> [DetailedActivity]
     func getDetailedActivity(by: Int, params: KeyValuePairs<String, Any>?) async throws -> DetailedActivity
     func getActivityZones(by: Int) async throws -> [ActivityZone]
@@ -12,7 +13,7 @@ public protocol StravaApi {
 }
 
 public class StravaApiImpl: StravaApi {
-    
+        
     // MARK: Initializer and Properties
     private let request: HTTPRequest
     private let oAuth: OAuth

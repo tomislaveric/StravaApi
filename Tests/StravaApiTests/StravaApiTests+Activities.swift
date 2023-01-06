@@ -53,7 +53,7 @@ extension StravaApiTests {
     func test_getActivityZones_shouldReturnActivityZone() async throws {
         let sut = try createSUT()
         let activityId = 8325454120
-        try requestShouldReturn(for: "/api/v3/activities/\(activityId)/zones", jsonFileName: "ActivityZones")
+        try requestShouldReturn(for: "/api/v3/activities/\(activityId)/zones", jsonFileName: "Zones")
         
         let expectation = expectation(description: "Fetching activity zones with id: \(activityId)")
         let actual: [ActivityZone] = try await sut.getActivityZones(by: activityId)

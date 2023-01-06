@@ -13,8 +13,13 @@ struct Endpoint {
     static var athleteActivities: String {
         "\(self.baseUrl)/athlete/activities"
     }
-    static func athlete() -> String {
-        "\(self.baseUrl)/athlete"
+    static func athlete(subType: Subtype? = nil) -> String {
+        if let type = subType {
+            return "\(self.baseUrl)/athlete/\(type.rawValue)"
+        } else {
+            return "\(self.baseUrl)/athlete"
+        }
+        
     }
     static func activity(id: Int, subType: Subtype? = nil) -> String {
         if let type = subType {
