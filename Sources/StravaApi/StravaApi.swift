@@ -4,11 +4,37 @@ import OAuth
 
 public protocol StravaApi {
     func registerTokenUpdate(current: Token?, callback: @escaping (Token) throws -> Void)
+    /// Returns the currently authenticated athlete. Tokens with profile:read_all scope will receive a detailed athlete representation; all others will receive a summary representation.
+    /// - Returns: ``DetailedAthlete``
     func getDetailedAthlete() async throws -> DetailedAthlete
+    /// Returns the the authenticated athlete's heart rate and power zones. Requires profile:read_all.
+    /// - Returns: Array of ``ActivityZone``
     func getAthleteZones() async throws -> [ActivityZone]
+    /// Returns the activities of an athlete for a specific identifier. Requires activity:read. Only Me activities will be filtered out unless requested by a token with activity:read_all.
+    /// - Parameters:
+    ///   - params: Example: ["before": Int, "after": Int, "page": Int, "per_page" : Int]
+    ///   - before: An epoch timestamp to use for filtering activities that have taken place before a certain time.
+    ///   - after: An epoch timestamp to use for filtering activities that have taken place after a certain time.
+    ///   - page: Page number. Defaults to 1.
+    ///   - per_page: Number of items per page. Defaults to 30.
+    /// - Returns: Array of ``DetailedActivity``
     func getAthleteDetailedActivities(params: KeyValuePairs<String, Any>?) async throws -> [DetailedActivity]
+    /// Returns the given activity that is owned by the authenticated athlete. Requires activity:read for Everyone and Followers activities. Requires activity:read_all for Only Me activities.
+    /// - Parameters:
+    ///   - id: Integer **required** The identifier of the activity.
+    ///   - params: ["include_all_efforts" : Bool]
+    ///   - include_all_efforts: To include all segments efforts.
+    /// - Returns:``DetailedActivity``
     func getDetailedActivity(by: Int, params: KeyValuePairs<String, Any>?) async throws -> DetailedActivity
+    /// Summit Feature. Returns the zones of a given activity. Requires activity:read for Everyone and Followers activities. Requires activity:read_all for Only Me activities.
+    /// - Parameters:
+    ///   - id: Integer **required** The identifier of the activity.
+    /// - Returns: Array of ``ActivityZone``
     func getActivityZones(by: Int) async throws -> [ActivityZone]
+    /// Returns the laps of an activity identified by an identifier. Requires activity:read for Everyone and Followers activities. Requires activity:read_all for Only Me activities.
+    /// - Parameters:
+    ///   - id: Integer **required** The identifier of the activity.
+    /// - Returns: Array of ``Lap``
     func getActivityLaps(by: Int) async throws -> [Lap]
 }
 
