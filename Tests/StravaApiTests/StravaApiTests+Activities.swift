@@ -9,7 +9,7 @@ extension StravaApiTests {
         try requestShouldReturn(for: "/api/v3/athlete/activities", jsonFileName: "DetailedActivities")
         
         let expectation = expectation(description: "Fetching activities")
-        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities(params: nil)
+        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities()
         XCTAssertEqual(actual.count, 2)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
@@ -20,7 +20,7 @@ extension StravaApiTests {
         try requestShouldReturn(for: "/api/v3/athlete/activities?before=12&after=10&page=1&per_page=20", jsonFileName: "DetailedActivities")
         
         let expectation = expectation(description: "Fetching activities")
-        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities(params: ["before": 12, "after": 10, "page": 1, "per_page": 20])
+        let actual: [DetailedActivity] = try await sut.getAthleteDetailedActivities(before: 12, after: 10, page: 1, perPage: 20)
         XCTAssertEqual(actual.count, 2)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
@@ -32,7 +32,7 @@ extension StravaApiTests {
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)", jsonFileName: "DetailedActivity")
         
         let expectation = expectation(description: "Fetching activity with id: \(activityId)")
-        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, params: nil)
+        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId)
         XCTAssertEqual(actual.id, activityId)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
@@ -44,7 +44,7 @@ extension StravaApiTests {
         try requestShouldReturn(for: "/api/v3/activities/\(activityId)?include_all_efforts=true", jsonFileName: "DetailedActivity")
         
         let expectation = expectation(description: "Fetching activity with id: \(activityId)")
-        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, params: ["include_all_efforts":true])
+        let actual: DetailedActivity = try await sut.getDetailedActivity(by: activityId, withEfforts: true)
         XCTAssertEqual(actual.id, activityId)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
