@@ -55,6 +55,18 @@ public protocol StravaApi {
     ///   - id: (Int) **required** The identifier of the athlete. Must match the authenticated athlete.
     /// - Returns: ``ActivityStats``
     func getAthleteStats(by: Int) async throws -> ActivityStats
+       /// Creates a manual activity for an athlete, requires activity:write scope.
+       /// - Parameters:
+       ///   - name:        The name of the activity.  (**required**)
+       ///   - type:        The ``SportType``) of activity. (**required**)
+       ///   - startDate:   Start date of activity. (**required**)
+       ///   - elapsed_time:In seconds. (**required**)
+       ///   - description: Description of activity.
+       ///   - distance:    In meters.
+       ///   - trainer:     Set true to mark as a trainer activity.
+       ///   - commute:     Set true to mark as commute.
+       /// - Returns: ``DetailedActivity``
+    func createActivity(name: String, type: SportType, startDate: Date, elapsedTime: Int, description: String?, distance: Double?, trainer: Bool?, commute: Bool?) async throws -> DetailedActivity
 }
 
 public class StravaApiImpl: StravaApi {
@@ -78,11 +90,11 @@ public class StravaApiImpl: StravaApi {
     }
     
     // MARK: Helper functions
-    func handleRequest<ReturnType: Decodable>(url: URL, params: KeyValuePairs<String, Any>? = nil) async throws -> ReturnType {
+    func handleRequest<ReturnType: Decodable>(url: URL, type: RequestType, params: KeyValuePairs<String, Any>? = nil) async throws -> ReturnType {
         return try await triggerRequest(endpoint: params == nil ? url : set(params: params, for: url))
     }
     
-    private func triggerRequest<ReturnType: Decodable>(endpoint: URL?) async throws -> ReturnType {
+    private func triggerRequest<ReturnType: Decodable>(endpoint: URL?, requestType: RequestType = .GET) async throws -> ReturnType {
         guard let url = endpoint else {
             throw StravaApiError.badUrl
         }
@@ -92,7 +104,13 @@ public class StravaApiImpl: StravaApi {
         }
         try callback(token)
         self.currentToken = token
-        return try await request.get(url: url, header: ["Authorization": "\(token.token_type) \(token.access_token)"])
+        
+        switch requestType {
+        case .GET:
+            return try await request.get(url: url, header: ["Authorization": "\(token.token_type) \(token.access_token)"])
+        case .POST:
+            return try await request.post(url: url, header: ["Authorization": "\(token.token_type) \(token.access_token)"])
+        }
     }
     
     // MARK: Private helper functions
@@ -127,4 +145,9 @@ public class StravaApiImpl: StravaApi {
 enum StravaApiError: Error {
     case badUrl
     case couldNotFetchAccessToken
+}
+
+enum RequestType {
+    case GET
+    case POST
 }
