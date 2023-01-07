@@ -93,10 +93,10 @@ public class StravaApiImpl: StravaApi {
     
     // MARK: Helper functions
     func handleRequest<ReturnType: Decodable>(url: URL, type: RequestType, params: KeyValuePairs<String, Any?>? = nil) async throws -> ReturnType {
-        return try await triggerRequest(endpoint: params == nil ? url : set(params: params, for: url))
+        return try await triggerRequest(endpoint: params == nil ? url : set(params: params, for: url), requestType: type)
     }
     
-    private func triggerRequest<ReturnType: Decodable>(endpoint: URL?, requestType: RequestType = .GET) async throws -> ReturnType {
+    private func triggerRequest<ReturnType: Decodable>(endpoint: URL?, requestType: RequestType) async throws -> ReturnType {
         guard let url = endpoint else {
             throw StravaApiError.badUrl
         }
