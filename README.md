@@ -17,7 +17,7 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [x] `GET /activities/{id}/laps`
 - [x] `GET /activities/{id}/comments`
 - [x] `GET /activities/{id}/kudos`
-- [ ] `POST /activities`
+- [x] `POST /activities`
 - [ ] `PUT /activities/{id}`
 
 ### Segments
