@@ -25,11 +25,14 @@ struct Endpoint {
         }
         
     }
-    static func activity(id: Int, subType: Subtype? = nil) -> String {
-        if let type = subType {
+    static func activity(id: Int? = nil, subType: Subtype? = nil) -> String {
+        
+        if let id = id, let type = subType {
             return "\(self.baseUrl)/activities/\(id)/\(type.rawValue)"
-        } else {
+        } else if let id = id {
             return "\(self.baseUrl)/activities/\(id)"
+        } else {
+            return "\(self.baseUrl)/activities"
         }
     }
 }
