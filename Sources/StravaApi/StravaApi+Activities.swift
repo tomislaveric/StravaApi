@@ -43,7 +43,7 @@ extension StravaApiImpl {
         return try await handleRequest(url: endpoint, type: .GET, params: params)
     }
     
-    public func getDetailedActivity(by id: Int, withEfforts: Bool? = nil) async throws -> DetailedActivity {
+    public func getDetailedActivity(by id: Int, withEfforts: Bool?) async throws -> DetailedActivity {
         guard let endpoint = URL(string: Endpoint.activity(id: id)) else {
             throw StravaApiError.badUrl
         }
@@ -53,7 +53,7 @@ extension StravaApiImpl {
         return try await handleRequest(url: endpoint, type: .GET, params: params)
     }
     
-    public func getAthleteDetailedActivities(before: Int? = nil, after: Int? = nil, page: Int? = nil, perPage: Int? = nil) async throws -> [DetailedActivity] {
+    public func getAthleteDetailedActivities(before: Int?, after: Int?, page: Int?, perPage: Int?) async throws -> [DetailedActivity] {
         guard let endpoint = URL(string: Endpoint.athleteActivities) else {
             throw StravaApiError.badUrl
         }
@@ -67,7 +67,7 @@ extension StravaApiImpl {
         return try await handleRequest(url: endpoint, type: .GET, params: params)
     }
     
-    public func createActivity(name: String, type: SportType, startDate: Date, elapsedTime: Int, description: String? = nil, distance: Double? = nil, trainer: Bool? = nil, commute: Bool? = nil) async throws -> DetailedActivity {
+    public func createActivity(name: String, type: SportType, startDate: Date, elapsedTime: Int, description: String?, distance: Double?, trainer: Bool?, commute: Bool?) async throws -> DetailedActivity {
         guard let endpoint = URL(string: Endpoint.activity()) else {
             throw StravaApiError.badUrl
         }
@@ -87,20 +87,20 @@ extension StravaApiImpl {
 
 extension StravaApi {
     // MARK: Default protocol implementations
-    public func createActivity(name: String, type: SportType, startDate: Date, elapsedTime: Int) async throws -> DetailedActivity {
-        return try await self.createActivity(name: name, type: type, startDate: startDate, elapsedTime: elapsedTime, description: nil, distance: nil, trainer: nil, commute: nil)
+    public func createActivity(name: String, type: SportType, startDate: Date, elapsedTime: Int, description: String? = nil, distance: Double? = nil, trainer: Bool? = nil, commute: Bool? = nil) async throws -> DetailedActivity {
+        return try await self.createActivity(name: name, type: type, startDate: startDate, elapsedTime: elapsedTime, description: description, distance: distance, trainer: trainer, commute: commute)
     }
     
-    public func getActivityComments(by id: Int) async throws -> [Comment] {
-        return try await getActivityComments(by: id, page: nil, perPage: nil, pageSize: nil, afterCursor: nil)
+    public func getActivityComments(by id: Int, page: Int? = nil, perPage: Int? = nil, pageSize: Int? = nil, afterCursor: String? = nil) async throws -> [Comment] {
+        return try await getActivityComments(by: id, page: page, perPage: perPage, pageSize: pageSize, afterCursor: afterCursor)
     }
     
-    public func getDetailedActivity(by id: Int) async throws -> DetailedActivity {
-        return try await getDetailedActivity(by: id, withEfforts: nil)
+    public func getDetailedActivity(by id: Int, withEfforts: Bool? = nil) async throws -> DetailedActivity {
+        return try await getDetailedActivity(by: id, withEfforts: withEfforts)
     }
     
-    public func getAthleteDetailedActivities() async throws -> [DetailedActivity] {
-        return try await getAthleteDetailedActivities(before: nil, after: nil, page: nil, perPage: nil)
+    public func getAthleteDetailedActivities(before: Int? = nil, after: Int? = nil, page: Int? = nil, perPage: Int? = nil) async throws -> [DetailedActivity] {
+        return try await getAthleteDetailedActivities(before: before, after: after, page: page, perPage: perPage)
     }
     
     public func getActivityKudos(by id: Int) async throws -> [Kudo] {

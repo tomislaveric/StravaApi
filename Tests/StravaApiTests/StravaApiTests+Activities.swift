@@ -98,4 +98,28 @@ extension StravaApiTests {
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)
     }
+    
+    func test_createActivityShouldReturn_DetailedActivity() async throws {
+        let sut = try createSUT()
+        let creationDate = Date()
+        try requestShouldReturn(for: "/api/v3/activities?name=BigRide&sport_type=Ride&start_date_local=\(creationDate.ISO8601Format())&elapsed_time=12", jsonFileName: "DetailedActivity")
+                                     
+        let expectation = expectation(description: "Fetching /athlete")
+        let actual: DetailedActivity = try await sut.createActivity(name: "BigRide", type: .Ride, startDate: creationDate, elapsedTime: 12)
+        XCTAssertEqual(actual.id, 123)
+        expectation.fulfill()
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func test_createActivityWithOptionalParam_ShouldReturn_DetailedActivity() async throws {
+        let sut = try createSUT()
+        let creationDate = Date()
+        try requestShouldReturn(for: "/api/v3/activities?name=BigRide&sport_type=Ride&start_date_local=\(creationDate.ISO8601Format())&elapsed_time=12&description=niceRide", jsonFileName: "DetailedActivity")
+                                     
+        let expectation = expectation(description: "Fetching /athlete")
+        let actual: DetailedActivity = try await sut.createActivity(name: "BigRide", type: .Ride, startDate: creationDate, elapsedTime: 12, description: "niceRide")
+        XCTAssertEqual(actual.id, 123)
+        expectation.fulfill()
+        wait(for: [expectation], timeout: 5)
+    }
 }
