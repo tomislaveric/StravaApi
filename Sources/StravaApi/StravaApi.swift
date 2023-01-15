@@ -3,7 +3,10 @@ import Foundation
 import OAuth
 
 public protocol StravaApi {
+    // MARK: OAuth Token
     func registerTokenUpdate(current: Token?, callback: @escaping (Token) throws -> Void)
+    
+    // MARK: Athletes
     /// Returns the currently authenticated athlete. Tokens with profile:read_all scope will receive a detailed athlete representation; all others will receive a summary representation.
     /// - Parameters:
     ///   - current:    The optional existing token of type ``Token``. If you have a persisted token, pass it within this function.
@@ -13,6 +16,13 @@ public protocol StravaApi {
     /// Returns the the authenticated athlete's heart rate and power zones. Requires profile:read_all.
     /// - Returns:      Array of ``ActivityZone``
     func getAthleteZones() async throws -> [ActivityZone]
+    /// Returns the activity stats of an athlete. Only includes data from activities set to Everyone visibilty.
+    /// - Parameters:
+    ///  - id:           The identifier of the athlete. Must match the authenticated athlete. (**required**)
+    /// - Returns:      Type of ``ActivityStats``
+    func getAthleteStats(by: Int) async throws -> ActivityStats
+    
+    // MARK: Activities
     /// Returns the activities of an athlete for a specific identifier. Requires activity:read. Only Me activities will be filtered out unless requested by a token with activity:read_all.
     /// - Parameters:
     ///   - before:     An epoch timestamp to use for filtering activities that have taken place before a certain time.
@@ -52,23 +62,21 @@ public protocol StravaApi {
     ///   - perPage:    Number of items per page. Defaults to 30.
     /// - Returns:      Array of ``Kudo``
     func getActivityKudos(by: Int, page: Int?, perPage: Int?) async throws -> [Kudo]
-    /// Returns the activity stats of an athlete. Only includes data from activities set to Everyone visibilty.
+    /// Creates a manual activity for an athlete, requires activity:write scope.
     /// - Parameters:
-    ///  - id:           The identifier of the athlete. Must match the authenticated athlete. (**required**)
-    /// - Returns:      Type of ``ActivityStats``
-    func getAthleteStats(by: Int) async throws -> ActivityStats
-       /// Creates a manual activity for an athlete, requires activity:write scope.
-       /// - Parameters:
-       ///  - name:        The name of the activity.  (**required**)
-       ///  - type:        The ``SportType``) of activity. (**required**)
-       ///  - startDate:   Start date of activity. (**required**)
-       ///  - elapsedTime: In seconds. (**required**)
-       ///  - description: Description of activity.
-       ///  - distance:    In meters.
-       ///  - trainer:     Set true to mark as a trainer activity.
-       ///  - commute:     Set true to mark as commute.
-       /// - Returns:      Type of ``DetailedActivity``
+    ///  - name:        The name of the activity.  (**required**)
+    ///  - type:        The ``SportType``) of activity. (**required**)
+    ///  - startDate:   Start date of activity. (**required**)
+    ///  - elapsedTime: In seconds. (**required**)
+    ///  - description: Description of activity.
+    ///  - distance:    In meters.
+    ///  - trainer:     Set true to mark as a trainer activity.
+    ///  - commute:     Set true to mark as commute.
+    /// - Returns:      Type of ``DetailedActivity``
     func createActivity(name: String, type: SportType, startDate: Date, elapsedTime: Int, description: String?, distance: Double?, trainer: Bool?, commute: Bool?) async throws -> DetailedActivity
+    
+    // MARK: Segments
+    //TODO: Add them
 }
 
 public class StravaApiImpl: StravaApi {
