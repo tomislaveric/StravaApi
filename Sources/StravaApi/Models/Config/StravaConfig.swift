@@ -8,7 +8,8 @@ public struct StravaConfig {
         redirectUri: String,
         callbackURLScheme: String,
         clientSecret: String,
-        scope: String
+        scopes: [Scope],
+        approvalPrompt: ApprovalPrompt = .auto
     ) {
         self.authorizeUrl = authorizeUrl
         self.tokenUrl = tokenUrl
@@ -16,7 +17,8 @@ public struct StravaConfig {
         self.redirectUri = redirectUri
         self.callbackURLScheme = callbackURLScheme
         self.clientSecret = clientSecret
-        self.scope = scope
+        self.scopes = scopes
+        self.approvalPrompt = approvalPrompt
     }
     
     public let authorizeUrl: String
@@ -25,9 +27,14 @@ public struct StravaConfig {
     public let redirectUri: String
     public let callbackURLScheme: String
     public let clientSecret: String
-    public let scope: String
+    public let scopes: [Scope]
     public let responseType: String = "code"
-    public let approvalPrompt: String = "auto"
+    public let approvalPrompt: ApprovalPrompt
     public let authorizationGrant: String = "authorization_code"
     public let refreshGrant: String = "refresh_token"
+}
+
+public enum ApprovalPrompt: String {
+    case auto
+    case force
 }

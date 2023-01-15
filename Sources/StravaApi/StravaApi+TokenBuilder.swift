@@ -9,7 +9,7 @@ extension StravaApiImpl {
             URLQueryItem(name: "client_id", value: config.clientId),
             URLQueryItem(name: "client_secret", value: config.clientSecret),
             URLQueryItem(name: "code", value: authToken),
-            URLQueryItem(name: "scope", value: config.scope),
+            URLQueryItem(name: "scope", value: config.scopes.map { $0.rawValue }.joined(separator: ",")),
             URLQueryItem(name: "grant_type", value: config.authorizationGrant)
         ]
         return components?.url
@@ -33,7 +33,7 @@ extension StravaApiImpl {
             URLQueryItem(name: "client_id", value: config.clientId),
             URLQueryItem(name: "redirect_uri", value: config.redirectUri),
             URLQueryItem(name: "response_type", value: config.responseType),
-            URLQueryItem(name: "scope", value: config.scope)
+            URLQueryItem(name: "scope", value: config.scopes.map { $0.rawValue }.joined(separator: ",")),
         ]
         return components?.url
     }
