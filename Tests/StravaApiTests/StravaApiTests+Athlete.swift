@@ -20,7 +20,7 @@ extension StravaApiTests {
         try requestShouldReturn(for: "/api/v3/athlete/zones", jsonFileName: "Zones")
         
         let expectation = expectation(description: "Fetching /athlete")
-        let actual: [ActivityZone] = try await sut.getAthleteZones()
+        let actual: [Zone] = try await sut.getAthleteZones()
         XCTAssertEqual(actual.count, 2)
         expectation.fulfill()
         wait(for: [expectation], timeout: 5)

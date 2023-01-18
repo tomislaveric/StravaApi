@@ -4,7 +4,7 @@ import Foundation
 /// Athlete related endpoint requests
 extension StravaApiImpl {
     
-    public func getAthleteZones() async throws -> [ActivityZone] {
+    public func getAthleteZones() async throws -> Zones {
         guard let endpoint = URL(string: Endpoint.athlete(subType: .zones)) else {
             throw StravaApiError.badUrl
         }

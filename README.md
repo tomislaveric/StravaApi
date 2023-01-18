@@ -59,23 +59,23 @@ This is an **!unofficial & WIP!** easy to use StravaSDK written in Swift for iOS
 - [x] Kudo
 - [x] ActivityStats
 - [x] ActivityTotal
+- [x] HeartRateZoneRanges
+- [x] ZoneRange
+- [x] ZoneRanges
+- [x] Zones
+- [x] PowerZoneRanges
 - [ ] BaseStream
 - [ ] Error
 - [ ] ExplorerResponse
 - [ ] ExplorerSegment
 - [ ] Fault
-- [ ] HeartRateZoneRanges
 - [ ] MetaClub
 - [ ] PhotosSummary_primary
-- [ ] PowerZoneRanges
 - [ ] Route
 - [ ] StreamSet
 - [ ] TimedZoneDistribution
 - [ ] UpdatableActivity
 - [ ] Upload
-- [ ] ZoneRange
-- [ ] ZoneRanges
-- [ ] Zones
 - [ ] AltitudeStream
 - [ ] CadenceStream
 - [ ] DetailedGear

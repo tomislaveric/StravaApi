@@ -14,8 +14,8 @@ public protocol StravaApi {
     /// - Returns:      Type of ``DetailedAthlete``
     func getDetailedAthlete() async throws -> DetailedAthlete
     /// Returns the the authenticated athlete's heart rate and power zones. Requires profile:read_all.
-    /// - Returns:      Array of ``ActivityZone``
-    func getAthleteZones() async throws -> [ActivityZone]
+    /// - Returns:      Array of ``Zones``
+    func getAthleteZones() async throws -> Zones
     /// Returns the activity stats of an athlete. Only includes data from activities set to Everyone visibilty.
     /// - Parameters:
     ///  - id:           The identifier of the athlete. Must match the authenticated athlete. (**required**)
