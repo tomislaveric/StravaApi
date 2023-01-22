@@ -34,5 +34,5 @@ public struct SummaryClub: Decodable, Equatable {
     ///Whether the club is verified or not.
     public let verified: Bool?
     ///The club's vanity URL.
-    public let url: URL?
+    public let url: String?
 }
