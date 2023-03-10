@@ -76,7 +76,10 @@ public protocol StravaApi {
     func createActivity(name: String, type: SportType, startDate: Date, elapsedTime: Int, description: String?, distance: Double?, trainer: Bool?, commute: Bool?) async throws -> DetailedActivity
     
     // MARK: Segments
-    //TODO: Add them
+    // TODO: implement segments
+    
+    // MARK: Streams
+    func getActivityStreams(by id: Int, keys: [StreamKey]) async throws -> StreamSet
 }
 
 public class StravaApiImpl: StravaApi {
